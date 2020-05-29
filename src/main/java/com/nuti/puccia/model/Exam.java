@@ -71,4 +71,9 @@ public class Exam {
             throw new IllegalArgumentException("Student not present!");
         students.remove(student);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
