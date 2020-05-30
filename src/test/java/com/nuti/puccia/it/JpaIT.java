@@ -82,8 +82,7 @@ public class JpaIT {
         entityManager.persist(student3);
         entityManager.getTransaction().commit();
 
-        entityManager.clear();
-        exam = entityManager.find(Exam.class, exam.getId());
+        entityManager.refresh(exam);
         assertThat(exam.getStudents()).containsExactly(student2, student1, student3);
     }
 }

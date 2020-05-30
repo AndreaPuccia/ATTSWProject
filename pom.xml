@@ -202,6 +202,8 @@
                     </targetClasses>
                     <targetTests>
                         <param>${project.groupId}.ut.*</param>
+                        <param>${project.groupId}.it.ExamRepositoryIT</param>
+                        <param>${project.groupId}.it.StudentRepositoryIT</param>
                     </targetTests>
                     <excludedClasses>
                         <param>${project.groupId}.model.Student</param>

@@ -65,8 +65,6 @@ public class Exam {
     }
 
     public void removeStudent(Student student) {
-        if (students.isEmpty())
-            throw new IllegalArgumentException("Students is Empty");
         if (!students.contains(student))
             throw new IllegalArgumentException("Student not present!");
         students.remove(student);

@@ -71,6 +71,7 @@ public class StudentRepositoryIT {
         Student student2 = new Student("Lorenzo", "Nuti");
         studentRepository.addStudent(student2);
         assertThat(getStudentFromDataBase()).contains(student1, student2);
+        assertThat(entityManager.getTransaction().isActive()).isFalse();
     }
 
     @Test
@@ -79,15 +80,18 @@ public class StudentRepositoryIT {
         addTestStudentToDataBase(student1);
         studentRepository.deleteStudent(student1);
         assertThat(getStudentFromDataBase()).isEmpty();
+        assertThat(entityManager.getTransaction().isActive()).isFalse();
     }
 
     @Test
-    public void findByIdAStudentWhenDataBaseIsEmpty() {
-        assertThat(studentRepository.findById(1)).isNull();
+    public void findByIdAStudentWhenItDoesNotExist() {
+        Student student = new Student("Andrea", "Puccia");
+        addTestStudentToDataBase(student);
+        assertThat(studentRepository.findById(0)).isNull();
     }
 
     @Test
-    public void findByIdAStudentWhenDataBaseIsNotEmpty() {
+    public void findByIdAStudentWhenItExists() {
         Student student1 = new Student("Andrea", "Puccia");
         addTestStudentToDataBase(student1);
         Student student2 = new Student("Lorenzo", "Nuti");

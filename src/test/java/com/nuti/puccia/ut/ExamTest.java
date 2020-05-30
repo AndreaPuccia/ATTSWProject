@@ -53,7 +53,7 @@ public class ExamTest {
         Student student = new Student("Andrea", "Puccia");
         assertThatThrownBy(() -> exam.removeStudent(student))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Students is Empty");
+                .hasMessage("Student not present!");
         assertThat(students).isEmpty();
     }
 
