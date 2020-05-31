@@ -19,7 +19,7 @@ public class ExamTest {
     @Before
     public void setup() {
         students = new ArrayList<>();
-        exam = new Exam("ATTWS", students);
+        exam = new Exam("ATTSW", students);
     }
 
     @Test
