@@ -35,7 +35,7 @@ public class ExamTest {
         students.add(student);
         assertThatThrownBy(() -> exam.addStudent(student))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Student already present!");
+                .hasMessage("Student " + student.toString() + " already present in " + exam.toString() + "!");
     }
 
     @Test
@@ -53,7 +53,7 @@ public class ExamTest {
         Student student = new Student("Andrea", "Puccia");
         assertThatThrownBy(() -> exam.removeStudent(student))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Student not present!");
+                .hasMessage("Student " + student.toString() + " not present in " + exam.toString() + "!");
         assertThat(students).isEmpty();
     }
 
@@ -64,7 +64,7 @@ public class ExamTest {
         Student student2 = new Student("Andrea", "Puccia");
         assertThatThrownBy(() -> exam.removeStudent(student2))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Student not present!");
+                .hasMessage("Student " + student2.toString() + " not present in " + exam.toString() + "!");
         assertThat(students).containsExactly(student1);
     }
 }

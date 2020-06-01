@@ -58,15 +58,17 @@ public class Exam {
         return Objects.hash(id, name, students);
     }
 
-    public void addStudent(Student student) {
+    public void addStudent(Student student) throws IllegalArgumentException {
         if (students.contains(student))
-            throw new IllegalArgumentException("Student already present!");
+            throw new IllegalArgumentException("Student " + student.toString() +
+                    " already present in " + this.toString() + "!");
         students.add(student);
     }
 
-    public void removeStudent(Student student) {
+    public void removeStudent(Student student) throws IllegalArgumentException {
         if (!students.contains(student))
-            throw new IllegalArgumentException("Student not present!");
+            throw new IllegalArgumentException("Student " + student.toString() +
+                    " not present in " + this.toString() + "!");
         students.remove(student);
     }
 

@@ -21,9 +21,9 @@ public class ServiceLayer {
         studentRepository.addStudent(student);
     }
 
-    public void deleteStudent(Student student) {
+    public void deleteStudent(Student student) throws IllegalArgumentException {
         if (studentRepository.findById(student.getId()) == null)
-            throw new IllegalArgumentException("Student does not exist");
+            throw new IllegalArgumentException("Student " + student.toString() + " does not exist!");
         studentRepository.deleteStudent(student);
         examRepository.deleteStudentReservations(student);
     }
@@ -36,9 +36,9 @@ public class ServiceLayer {
         examRepository.addExam(exam);
     }
 
-    public void deleteExam(Exam exam) {
+    public void deleteExam(Exam exam) throws IllegalArgumentException {
         if (examRepository.findById(exam.getId()) == null)
-            throw new IllegalArgumentException("Exam does not exist");
+            throw new IllegalArgumentException("Exam " + exam.toString() + " does not exist!");
         examRepository.deleteExam(exam);
     }
 
@@ -46,11 +46,11 @@ public class ServiceLayer {
         return examRepository.findAll();
     }
 
-    public void addReservation(Exam exam, Student student) {
+    public void addReservation(Exam exam, Student student) throws IllegalArgumentException {
         examRepository.addReservation(exam, student);
     }
 
-    public void deleteReservation(Exam exam, Student student) {
+    public void deleteReservation(Exam exam, Student student) throws IllegalArgumentException {
         examRepository.deleteReservation(exam, student);
     }
 }

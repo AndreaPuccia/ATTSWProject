@@ -55,12 +55,12 @@ public class ServiceLayerTest {
         when(studentRepository.findById(0)).thenReturn(null);
         assertThatThrownBy(() -> serviceLayer.deleteStudent(student))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Student does not exist");
+                .hasMessage("Student " + student.toString() + " does not exist!");
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
     @Test
-    public void findAllStudentsWhenStudentsArePresent() {
+    public void findAllStudentsWhenTheyArePresent() {
         Student student = new Student("Andrea", "Puccia");
         when(studentRepository.findAll()).thenReturn(new ArrayList<>(Collections.singletonList(student)));
         assertThat(serviceLayer.findAllStudents()).containsExactly(student);
@@ -88,13 +88,13 @@ public class ServiceLayerTest {
         when(examRepository.findById(0)).thenReturn(null);
         assertThatThrownBy(() -> serviceLayer.deleteExam(exam))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Exam does not exist");
+                .hasMessage("Exam " + exam.toString() + " does not exist!");
         verifyNoMoreInteractions(ignoreStubs(examRepository));
     }
 
 
     @Test
-    public void findAllStudentsWhenExamsArePresent() {
+    public void findAllExamsWhenTheyArePresent() {
         Exam exam = new Exam("ATTSW", new ArrayList<>());
         when(examRepository.findAll()).thenReturn(new ArrayList<>(Collections.singletonList(exam)));
         assertThat(serviceLayer.findAllExams()).containsExactly(exam);

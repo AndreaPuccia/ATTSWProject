@@ -202,15 +202,17 @@
                     </targetClasses>
                     <targetTests>
                         <param>${project.groupId}.ut.*</param>
-                        <param>${project.groupId}.it.ExamRepositoryIT</param>
-                        <param>${project.groupId}.it.StudentRepositoryIT</param>
                     </targetTests>
                     <excludedClasses>
                         <param>${project.groupId}.model.Student</param>
+                        <param>${project.groupId}.repository.mysql.ExamRepositoryMysql</param>
+                        <param>${project.groupId}.repository.mysql.StudentRepositoryMysql</param>
                     </excludedClasses>
                     <excludedMethods>
                         <param>equals</param>
                         <param>hashCode</param>
+                        <param>toString</param>
+                        <param>get*</param>
                     </excludedMethods>
                     <mutators>
                         <mutator>DEFAULTS</mutator>

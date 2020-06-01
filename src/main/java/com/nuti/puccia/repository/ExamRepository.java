@@ -10,9 +10,9 @@ public interface ExamRepository {
 
     void deleteExam(Exam exam);
 
-    void addReservation(Exam exam, Student student);
+    void addReservation(Exam exam, Student student) throws IllegalArgumentException;
 
-    void deleteReservation(Exam exam, Student student);
+    void deleteReservation(Exam exam, Student student) throws IllegalArgumentException;
 
     void deleteStudentReservations(Student student);
 

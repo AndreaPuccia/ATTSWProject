@@ -30,7 +30,7 @@ public class ExamRepositoryMysql implements ExamRepository {
     }
 
     @Override
-    public void addReservation(Exam exam, Student student) {
+    public void addReservation(Exam exam, Student student) throws IllegalArgumentException {
         try {
             entityManager.getTransaction().begin();
             exam.addStudent(student);
@@ -40,7 +40,7 @@ public class ExamRepositoryMysql implements ExamRepository {
     }
 
     @Override
-    public void deleteReservation(Exam exam, Student student) {
+    public void deleteReservation(Exam exam, Student student) throws IllegalArgumentException {
         try {
             entityManager.getTransaction().begin();
             exam.removeStudent(student);
