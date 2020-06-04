@@ -1,4 +1,4 @@
-package com.nuti.puccia.serviceLayer;
+package com.nuti.puccia.service_layer;
 
 import com.nuti.puccia.model.Exam;
 import com.nuti.puccia.model.Student;
@@ -21,7 +21,7 @@ public class ServiceLayer {
         studentRepository.addStudent(student);
     }
 
-    public void deleteStudent(Student student) throws IllegalArgumentException {
+    public void deleteStudent(Student student) {
         if (studentRepository.findById(student.getId()) == null)
             throw new IllegalArgumentException("Student " + student.toString() + " does not exist!");
         studentRepository.deleteStudent(student);
@@ -36,7 +36,7 @@ public class ServiceLayer {
         examRepository.addExam(exam);
     }
 
-    public void deleteExam(Exam exam) throws IllegalArgumentException {
+    public void deleteExam(Exam exam) {
         if (examRepository.findById(exam.getId()) == null)
             throw new IllegalArgumentException("Exam " + exam.toString() + " does not exist!");
         examRepository.deleteExam(exam);
@@ -46,11 +46,11 @@ public class ServiceLayer {
         return examRepository.findAll();
     }
 
-    public void addReservation(Exam exam, Student student) throws IllegalArgumentException {
+    public void addReservation(Exam exam, Student student) {
         examRepository.addReservation(exam, student);
     }
 
-    public void deleteReservation(Exam exam, Student student) throws IllegalArgumentException {
+    public void deleteReservation(Exam exam, Student student) {
         examRepository.deleteReservation(exam, student);
     }
 }

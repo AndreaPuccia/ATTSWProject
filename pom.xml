@@ -207,7 +207,11 @@
                         <param>${project.groupId}.model.Student</param>
                         <param>${project.groupId}.repository.mysql.ExamRepositoryMysql</param>
                         <param>${project.groupId}.repository.mysql.StudentRepositoryMysql</param>
+                        <param>${project.groupId}.view.swing.*</param>
                     </excludedClasses>
+                    <excludedTestClasses>
+                        <param>${project.groupId}.ut.ViewTest</param>
+                    </excludedTestClasses>
                     <excludedMethods>
                         <param>equals</param>
                         <param>hashCode</param>

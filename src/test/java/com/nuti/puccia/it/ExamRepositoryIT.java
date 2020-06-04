@@ -111,6 +111,7 @@ public class ExamRepositoryIT {
         Student student = new Student("Andrea", "Puccia");
         addTestStudentToDataBase(student);
         examRepository.addReservation(exam, student);
+        assertThat(entityManager.getTransaction().isActive()).isFalse();
         entityManager.refresh(exam);
         assertThat(exam.getStudents()).containsExactly(student);
     }
@@ -135,6 +136,7 @@ public class ExamRepositoryIT {
         Exam exam = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student)));
         addTestExamToDataBase(exam);
         examRepository.deleteReservation(exam, student);
+        assertThat(entityManager.getTransaction().isActive()).isFalse();
         entityManager.refresh(exam);
         assertThat(exam.getStudents()).isEmpty();
     }
@@ -169,6 +171,7 @@ public class ExamRepositoryIT {
         addTestExamToDataBase(exam2);
 
         examRepository.deleteStudentReservations(student1);
+        assertThat(entityManager.getTransaction().isActive()).isFalse();
         entityManager.refresh(exam1);
         entityManager.refresh(exam2);
         assertThat(exam1.getStudents()).containsExactly(student2);

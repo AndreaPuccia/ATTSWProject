@@ -17,14 +17,17 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 @RunWith(GUITestRunner.class)
 public class ViewTest extends AssertJSwingJUnitTestCase {
     private static final Student student1 = new Student("Andrea", "Puccia");
     private static final Student student2 = new Student("Lorenzo", "Nuti");
     private static final Exam exam1 = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student1, student2)));
+    private static final Exam exam2 = new Exam("Analisi", new ArrayList<>(Collections.singletonList(student1)));
     private FrameFixture window;
     private ExamReservationsSwingView view;
     @Mock
@@ -51,9 +54,9 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
         assertThat(window.textBox("ExamNameText").isEnabled()).isTrue();
         assertThat(window.textBox("StudentNameText").isEnabled()).isTrue();
         assertThat(window.textBox("StudentSurnameText").isEnabled()).isTrue();
-        assertThat(window.button("RemoveExam").isEnabled()).isFalse();
-        assertThat(window.button("RemoveReservation").isEnabled()).isFalse();
-        assertThat(window.button("RemoveStudent").isEnabled()).isFalse();
+        assertThat(window.button("DeleteExam").isEnabled()).isFalse();
+        assertThat(window.button("DeleteReservation").isEnabled()).isFalse();
+        assertThat(window.button("DeleteStudent").isEnabled()).isFalse();
         assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add a reservation");
         assertThat(window.label("ErrorLabel").text()).isEqualTo("");
     }
@@ -135,27 +138,27 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     public void enablingDeleteExamButtonOnlyWhenAnExamIsSelected() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         window.list("ExamList").selectItem(0);
-        assertThat(window.button("RemoveExam").isEnabled()).isTrue();
+        assertThat(window.button("DeleteExam").isEnabled()).isTrue();
         window.list("ExamList").clearSelection();
-        assertThat(window.button("RemoveExam").isEnabled()).isFalse();
+        assertThat(window.button("DeleteExam").isEnabled()).isFalse();
     }
 
     @Test
     public void enablingDeleteStudentButtonOnlyWhenAStudentIsSelected() {
         GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
         window.list("StudentList").selectItem(0);
-        assertThat(window.button("RemoveStudent").isEnabled()).isTrue();
+        assertThat(window.button("DeleteStudent").isEnabled()).isTrue();
         window.list("StudentList").clearSelection();
-        assertThat(window.button("RemoveStudent").isEnabled()).isFalse();
+        assertThat(window.button("DeleteStudent").isEnabled()).isFalse();
     }
 
     @Test
     public void enablingDeleteReservationButtonOnlyWhenAReservationIsSelected() {
         GuiActionRunner.execute(() -> view.getReservationModel().addElement(student1));
         window.list("ReservationList").selectItem(0);
-        assertThat(window.button("RemoveReservation").isEnabled()).isTrue();
+        assertThat(window.button("DeleteReservation").isEnabled()).isTrue();
         window.list("ReservationList").clearSelection();
-        assertThat(window.button("RemoveReservation").isEnabled()).isFalse();
+        assertThat(window.button("DeleteReservation").isEnabled()).isFalse();
     }
 
     @Test
@@ -176,5 +179,102 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
         assertThat(window.list("ReservationList").contents())
                 .containsExactly(student1.toString(), student2.toString());
     }
+
+    @Test
+    public void showExamsOnUpdateExams() {
+        GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
+        GuiActionRunner.execute(() -> view.updateExams(new ArrayList<>(Arrays.asList(exam1, exam2))));
+        assertThat(window.list("ExamList").contents()).containsExactly(exam1.toString(), exam2.toString());
+        GuiActionRunner.execute(() -> view.updateExams(new ArrayList<>(Arrays.asList(exam2, exam1))));
+        assertThat(window.list("ExamList").contents()).containsExactly(exam2.toString(), exam1.toString());
+        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+    }
+
+    @Test
+    public void showStudentsOnUpdateStudents() {
+        GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
+        GuiActionRunner.execute(() -> view.updateStudents(new ArrayList<>(Arrays.asList(student1, student2))));
+        assertThat(window.list("StudentList").contents()).containsExactly(student1.toString(), student2.toString());
+        GuiActionRunner.execute(() -> view.updateStudents(new ArrayList<>(Arrays.asList(student2, student1))));
+        assertThat(window.list("StudentList").contents()).containsExactly(student2.toString(), student1.toString());
+        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+    }
+
+    @Test
+    public void showReservationsOnUpdateReservations() {
+        GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
+        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
+        window.list("ExamList").selectItem(0);
+        GuiActionRunner.execute(() -> view.getReservationModel().removeElement(student1));
+        GuiActionRunner.execute(() -> view.updateReservations());
+        assertThat(window.list("ReservationList").contents()).containsExactly(student1.toString(), student2.toString());
+        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+    }
+
+    @Test
+    public void showReservationsOnUpdateReservationsWhenNoExamIsSelected() {
+        GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
+        GuiActionRunner.execute(() -> view.getReservationModel().addElement(student1));
+        GuiActionRunner.execute(() -> view.updateReservations());
+        assertThat(window.list("ReservationList").contents()).isEmpty();
+        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+    }
+
+    @Test
+    public void showErrorInErrorLabel() {
+        GuiActionRunner.execute(() -> view.showError("Error message"));
+        assertThat(window.label("ErrorLabel").text()).isEqualTo("Error message");
+    }
+
+    @Test
+    public void addExamClickDelegatedToController() {
+        window.textBox("ExamNameText").enterText("ATTSW");
+        window.button("AddExam").click();
+        verify(controller).addExam(new Exam("ATTSW", new ArrayList<>()));
+    }
+
+    @Test
+    public void addStudentClickDelegatedToController() {
+        window.textBox("StudentNameText").enterText("Andrea");
+        window.textBox("StudentSurnameText").enterText("Puccia");
+        window.button("AddStudent").click();
+        verify(controller).addStudent(new Student("Andrea", "Puccia"));
+    }
+
+    @Test
+    public void addReservationClickDelegatedToController() {
+        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
+        GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
+        window.list("ExamList").selectItem(0);
+        window.list("StudentList").selectItem(0);
+        window.button("AddReservation").click();
+        verify(controller).addReservation(exam1, student1);
+    }
+
+    @Test
+    public void deleteExamClickDelegatedToController() {
+        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
+        window.list("ExamList").selectItem(0);
+        window.button("DeleteExam").click();
+        verify(controller).deleteExam(exam1);
+    }
+
+    @Test
+    public void deleteStudentClickDelegatedToController() {
+        GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
+        window.list("StudentList").selectItem(0);
+        window.button("DeleteStudent").click();
+        verify(controller).deleteStudent(student1);
+    }
+
+    @Test
+    public void deleteReservationClickDelegatedToController() {
+        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
+        window.list("ExamList").selectItem(0);
+        window.list("ReservationList").selectItem(0);
+        window.button("DeleteReservation").click();
+        verify(controller).deleteReservation(exam1, student1);
+    }
+
 
 }

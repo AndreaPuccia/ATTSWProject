@@ -49,7 +49,7 @@ public class ExamTest {
     }
 
     @Test
-    public void removeStudentFromExamWithEmptyExams() {
+    public void removeStudentFromExamWithEmptyStudents() {
         Student student = new Student("Andrea", "Puccia");
         assertThatThrownBy(() -> exam.removeStudent(student))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -58,7 +58,7 @@ public class ExamTest {
     }
 
     @Test
-    public void removeStudentFromExamWithoutThisExam() {
+    public void removeStudentFromExamWithoutThisStudent() {
         Student student1 = new Student("Lorenzo", "Nuti");
         students.add(student1);
         Student student2 = new Student("Andrea", "Puccia");

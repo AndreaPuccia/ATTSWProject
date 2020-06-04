@@ -4,7 +4,7 @@ import com.nuti.puccia.model.Exam;
 import com.nuti.puccia.model.Student;
 import com.nuti.puccia.repository.ExamRepository;
 import com.nuti.puccia.repository.StudentRepository;
-import com.nuti.puccia.serviceLayer.ServiceLayer;
+import com.nuti.puccia.service_layer.ServiceLayer;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

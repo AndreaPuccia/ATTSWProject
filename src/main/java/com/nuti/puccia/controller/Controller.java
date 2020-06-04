@@ -2,7 +2,7 @@ package com.nuti.puccia.controller;
 
 import com.nuti.puccia.model.Exam;
 import com.nuti.puccia.model.Student;
-import com.nuti.puccia.serviceLayer.ServiceLayer;
+import com.nuti.puccia.service_layer.ServiceLayer;
 import com.nuti.puccia.view.ExamReservationsView;
 
 public class Controller {
@@ -24,8 +24,10 @@ public class Controller {
         try {
             serviceLayer.deleteStudent(student);
             showAllStudents();
+            view.updateReservations();
         } catch (IllegalArgumentException e) {
             showAllStudents();
+            view.updateReservations();
             view.showError(e.getMessage());
         }
     }

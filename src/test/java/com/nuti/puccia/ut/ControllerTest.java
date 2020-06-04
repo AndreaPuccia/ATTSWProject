@@ -3,7 +3,7 @@ package com.nuti.puccia.ut;
 import com.nuti.puccia.controller.Controller;
 import com.nuti.puccia.model.Exam;
 import com.nuti.puccia.model.Student;
-import com.nuti.puccia.serviceLayer.ServiceLayer;
+import com.nuti.puccia.service_layer.ServiceLayer;
 import com.nuti.puccia.view.ExamReservationsView;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +56,7 @@ public class ControllerTest {
         controller.deleteStudent(student);
         inOrder.verify(serviceLayer).deleteStudent(student);
         inOrder.verify(view).updateStudents(students);
+        inOrder.verify(view).updateReservations();
     }
 
 
@@ -65,6 +66,7 @@ public class ControllerTest {
         doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).deleteStudent(student);
         controller.deleteStudent(student);
         inOrder.verify(view).updateStudents(students);
+        inOrder.verify(view).updateReservations();
         inOrder.verify(view).showError("Error message");
     }
 
