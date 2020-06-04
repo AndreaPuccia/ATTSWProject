@@ -17,6 +17,7 @@
 
         <hibernate.version>5.4.16.Final</hibernate.version>
         <hibernate.c3po.version>5.4.16.Final</hibernate.c3po.version>
+        <picocli.version>4.3.2</picocli.version>
         <mysql.version>8.0.20</mysql.version>
         <slf4j.version>1.7.30</slf4j.version>
         <intellij.version>7.0.3</intellij.version>
@@ -41,6 +42,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-c3p0</artifactId>
             <version>${hibernate.c3po.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>${picocli.version}</version>
         </dependency>
 
         <dependency>
@@ -165,6 +172,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/Student.*</exclude>
+                        <exclude>**/App.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
