@@ -57,7 +57,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
         assertThat(window.button("DeleteExam").isEnabled()).isFalse();
         assertThat(window.button("DeleteReservation").isEnabled()).isFalse();
         assertThat(window.button("DeleteStudent").isEnabled()).isFalse();
-        assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add a reservation");
+        assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add");
         assertThat(window.label("ErrorLabel").text()).isEqualTo("");
     }
 
@@ -125,13 +125,13 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
 
         examList.selectItem(0);
         assertThat(window.button("AddReservation").isEnabled()).isFalse();
-        assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add a reservation");
+        assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add");
 
         examList.clearSelection();
 
         studentList.selectItem(0);
         assertThat(window.button("AddReservation").isEnabled()).isFalse();
-        assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add a reservation");
+        assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add");
     }
 
     @Test

@@ -74,7 +74,7 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
                 addReservationButton.setEnabled(true);
                 reservationLabel.setText(studentsList.getSelectedValue().toString());
             } else
-                reservationLabel.setText("Select a student to add a reservation");
+                reservationLabel.setText("Select a student to add");
         };
 
         // Enabling add reservation button and change reservation label when a student and an exam are selected
@@ -203,7 +203,8 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
     private void $$$setupUI$$$() {
         formPanel = new JPanel();
         formPanel.setLayout(new GridLayoutManager(4, 1, new Insets(10, 10, 20, 10), -1, -1));
-        formPanel.setPreferredSize(new Dimension(1000, 500));
+        formPanel.setMinimumSize(new Dimension(400, 315));
+        formPanel.setPreferredSize(new Dimension(700, 500));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1, true, false));
         formPanel.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -253,8 +254,12 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
         panel3.setLayout(new GridLayoutManager(1, 3, new Insets(10, 0, 10, 0), -1, -1, true, false));
         formPanel.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
+        panel4.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel3.add(panel4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_SOUTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        addExamButton = new JButton();
+        addExamButton.setName("AddExam");
+        addExamButton.setText("Add");
+        panel4.add(addExamButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         examName = new JTextField();
         examName.setName("ExamNameText");
         examName.setText("");
@@ -263,10 +268,6 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
         label4.setText("Exam");
         label4.setVerticalAlignment(0);
         panel4.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        addExamButton = new JButton();
-        addExamButton.setName("AddExam");
-        addExamButton.setText("Add");
-        panel4.add(addExamButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel3.add(panel5, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_SOUTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -297,7 +298,7 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
         panel6.add(addReservationButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         reservationLabel = new JLabel();
         reservationLabel.setName("ReservationLabel");
-        reservationLabel.setText("Select a student to add a reservation");
+        reservationLabel.setText("Select a student to add");
         panel6.add(reservationLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         errorLabel = new JLabel();
         Font errorLabelFont = this.$$$getFont$$$(null, Font.BOLD, 14, errorLabel.getFont());
