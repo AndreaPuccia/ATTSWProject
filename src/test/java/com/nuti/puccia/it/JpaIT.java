@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class JpaIT {
     private static EntityManagerFactory entityManagerFactory;
-    private static EntityManager entityManager;
+    private EntityManager entityManager;
 
     @BeforeClass
     public static void setUpClass() {

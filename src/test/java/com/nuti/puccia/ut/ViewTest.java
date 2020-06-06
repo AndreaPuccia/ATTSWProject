@@ -4,6 +4,7 @@ import com.nuti.puccia.controller.Controller;
 import com.nuti.puccia.model.Exam;
 import com.nuti.puccia.model.Student;
 import com.nuti.puccia.view.swing.ExamReservationsSwingView;
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JListFixture;
@@ -24,10 +25,10 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(GUITestRunner.class)
 public class ViewTest extends AssertJSwingJUnitTestCase {
-    private static final Student student1 = new Student("Andrea", "Puccia");
-    private static final Student student2 = new Student("Lorenzo", "Nuti");
-    private static final Exam exam1 = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student1, student2)));
-    private static final Exam exam2 = new Exam("Analisi", new ArrayList<>(Collections.singletonList(student1)));
+    private final Student student1 = new Student("Andrea", "Puccia");
+    private final Student student2 = new Student("Lorenzo", "Nuti");
+    private final Exam exam1 = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student1, student2)));
+    private final Exam exam2 = new Exam("Analisi", new ArrayList<>(Collections.singletonList(student1)));
     private FrameFixture window;
     private ExamReservationsSwingView view;
     @Mock
@@ -47,6 +48,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
 
 
     @Test
+    @GUITest
     public void initialState() {
         assertThat(window.button("AddExam").isEnabled()).isFalse();
         assertThat(window.button("AddReservation").isEnabled()).isFalse();
@@ -62,6 +64,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void enablingAddExamButtonWhenNameTextIsNotEmpty() {
         window.textBox("ExamNameText").enterText("ATTSW");
         assertThat(window.button("AddExam").isEnabled()).isTrue();
@@ -70,12 +73,14 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void disablingAddExamButtonWhenNameTextIsBlank() {
         window.textBox("ExamNameText").enterText(" ");
         assertThat(window.button("AddExam").isEnabled()).isFalse();
     }
 
     @Test
+    @GUITest
     public void enablingAddStudentButtonWhenNameAndSurnameTextAreNotEmpty() {
         window.textBox("StudentNameText").enterText("Andrea");
         window.textBox("StudentSurnameText").enterText("Puccia");
@@ -90,6 +95,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void disablingAddStudentButtonWhenNameOrSurnameTextAreBlank() {
         JTextComponentFixture studentName = window.textBox("StudentNameText");
         JTextComponentFixture studentSurname = window.textBox("StudentSurnameText");
@@ -107,6 +113,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void enablingAddReservationButtonWhenAStudentAndAnExamAreSelected() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
@@ -117,6 +124,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void disablingAddReservationButtonWhenExamOrStudentAreNotSelected() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
@@ -135,6 +143,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void enablingDeleteExamButtonOnlyWhenAnExamIsSelected() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         window.list("ExamList").selectItem(0);
@@ -144,6 +153,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void enablingDeleteStudentButtonOnlyWhenAStudentIsSelected() {
         GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
         window.list("StudentList").selectItem(0);
@@ -153,6 +163,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void enablingDeleteReservationButtonOnlyWhenAReservationIsSelected() {
         GuiActionRunner.execute(() -> view.getReservationModel().addElement(student1));
         window.list("ReservationList").selectItem(0);
@@ -162,6 +173,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void showReservationsForAnExamOnlyWhenItIsSelected() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         window.list("ExamList").selectItem(0);
@@ -172,6 +184,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void showReservationsForAnExamWhenModelContainsAlreadyAReservation() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         GuiActionRunner.execute(() -> view.getReservationModel().addElement(student1));
@@ -181,6 +194,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void showExamsOnUpdateExams() {
         GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
         GuiActionRunner.execute(() -> view.updateExams(new ArrayList<>(Arrays.asList(exam1, exam2))));
@@ -191,6 +205,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void showStudentsOnUpdateStudents() {
         GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
         GuiActionRunner.execute(() -> view.updateStudents(new ArrayList<>(Arrays.asList(student1, student2))));
@@ -201,6 +216,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void showReservationsOnUpdateReservations() {
         GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
@@ -212,6 +228,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void showReservationsOnUpdateReservationsWhenNoExamIsSelected() {
         GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
         GuiActionRunner.execute(() -> view.getReservationModel().addElement(student1));
@@ -221,12 +238,14 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void showErrorInErrorLabel() {
         GuiActionRunner.execute(() -> view.showError("Error message"));
         assertThat(window.label("ErrorLabel").text()).isEqualTo("Error message");
     }
 
     @Test
+    @GUITest
     public void addExamClickDelegatedToController() {
         window.textBox("ExamNameText").enterText("ATTSW");
         window.button("AddExam").click();
@@ -234,6 +253,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void addStudentClickDelegatedToController() {
         window.textBox("StudentNameText").enterText("Andrea");
         window.textBox("StudentSurnameText").enterText("Puccia");
@@ -242,6 +262,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void addReservationClickDelegatedToController() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
@@ -252,6 +273,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void deleteExamClickDelegatedToController() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         window.list("ExamList").selectItem(0);
@@ -260,6 +282,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void deleteStudentClickDelegatedToController() {
         GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
         window.list("StudentList").selectItem(0);
@@ -268,6 +291,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void deleteReservationClickDelegatedToController() {
         GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
         window.list("ExamList").selectItem(0);

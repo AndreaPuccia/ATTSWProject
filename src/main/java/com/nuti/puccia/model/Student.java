@@ -63,6 +63,6 @@ public class Student {
 
     @Override
     public String toString() {
-        return name + ' ' + surname + " (id: " + id + ")";
+        return surname + ' ' + name + " (id: " + id + ")";
     }
 }

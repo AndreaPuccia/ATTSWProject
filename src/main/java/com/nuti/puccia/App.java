@@ -40,7 +40,7 @@ public class App implements Callable<Void> {
     private String username = "root";
 
     @Option(names = {"--password"}, description = "Password")
-    private String password = "root";
+    private String password = "";
 
     public static void main(String[] args) {
         new CommandLine(new App()).execute(args);

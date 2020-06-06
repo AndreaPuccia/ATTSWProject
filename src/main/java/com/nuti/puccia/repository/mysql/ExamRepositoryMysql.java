@@ -36,6 +36,7 @@ public class ExamRepositoryMysql implements ExamRepository {
             exam.addStudent(student);
         } finally {
             entityManager.getTransaction().commit();
+            entityManager.refresh(exam);
         }
     }
 

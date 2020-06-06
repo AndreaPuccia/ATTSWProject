@@ -18,9 +18,13 @@ import static org.assertj.core.api.Assertions.*;
 
 public class ExamRepositoryIT {
     private static EntityManagerFactory entityManagerFactory;
-    private static EntityManager entityManager;
+    private EntityManager entityManager;
 
     private ExamRepositoryMysql examRepository;
+
+    private final Student student1 = new Student("Andrea", "Puccia");
+    private final Student student2 = new Student("Lorenzo", "Nuti");
+    private final Student student3 = new Student("Mario", "Rossi");
 
     @BeforeClass
     public static void setUpClass() {
@@ -51,13 +55,6 @@ public class ExamRepositoryIT {
     @Test
     public void findAllWhenDataBaseIsEmpty() {
         assertThat(examRepository.findAll()).isEmpty();
-    }
-
-    @Test
-    public void findAllWhenDataBaseIsNotEmpty() {
-        Exam exam = new Exam("ATTSW", new ArrayList<>());
-        addTestExamToDataBase(exam);
-        assertThat(examRepository.findAll()).containsExactly(exam);
     }
 
     @Test
@@ -106,27 +103,29 @@ public class ExamRepositoryIT {
 
     @Test
     public void addReservationToDataBase() {
-        Exam exam = new Exam("ATTSW", new ArrayList<>());
+        addTestStudentToDataBase(student1);
+        addTestStudentToDataBase(student2);
+        addTestStudentToDataBase(student3);
+
+        Exam exam = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student2, student3)));
         addTestExamToDataBase(exam);
-        Student student = new Student("Andrea", "Puccia");
-        addTestStudentToDataBase(student);
-        examRepository.addReservation(exam, student);
+        examRepository.addReservation(exam, student1);
         assertThat(entityManager.getTransaction().isActive()).isFalse();
+        assertThat(exam.getStudents()).containsExactly(student2, student1, student3);
         entityManager.refresh(exam);
-        assertThat(exam.getStudents()).containsExactly(student);
+        assertThat(exam.getStudents()).containsExactly(student2, student1, student3);
     }
 
     @Test
     public void addExistingReservationToDataBase() {
-        Student student = new Student("Andrea", "Puccia");
-        addTestStudentToDataBase(student);
-        Exam exam = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student)));
+        addTestStudentToDataBase(student1);
+        Exam exam = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student1)));
         addTestExamToDataBase(exam);
-        assertThatThrownBy(() -> examRepository.addReservation(exam, student))
+        assertThatThrownBy(() -> examRepository.addReservation(exam, student1))
                 .isInstanceOf(IllegalArgumentException.class);
         assertThat(entityManager.getTransaction().isActive()).isFalse();
         entityManager.refresh(exam);
-        assertThat(exam.getStudents()).containsExactly(student);
+        assertThat(exam.getStudents()).containsExactly(student1);
     }
 
     @Test
@@ -143,9 +142,7 @@ public class ExamRepositoryIT {
 
     @Test
     public void deleteReservationFromDataBaseWhenStudentNotPresent() {
-        Student student1 = new Student("Andrea", "Puccia");
         addTestStudentToDataBase(student1);
-        Student student2 = new Student("Lorenzo", "Nuti");
         addTestStudentToDataBase(student2);
         Exam exam = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student1)));
         addTestExamToDataBase(exam);
@@ -158,11 +155,8 @@ public class ExamRepositoryIT {
 
     @Test
     public void deleteStudentReservationsFromDataBase() {
-        Student student1 = new Student("Andrea", "Puccia");
         addTestStudentToDataBase(student1);
-        Student student2 = new Student("Lorenzo", "Nuti");
         addTestStudentToDataBase(student2);
-        Student student3 = new Student("Mario", "Rossi");
         addTestStudentToDataBase(student3);
 
         Exam exam1 = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student1, student2)));

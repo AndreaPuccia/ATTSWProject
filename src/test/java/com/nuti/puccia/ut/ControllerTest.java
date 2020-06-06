@@ -30,10 +30,10 @@ public class ControllerTest {
 
     private InOrder inOrder;
 
-    private static final Student student = new Student("Andrea", "Puccia");
-    private static final List<Student> students = new ArrayList<>(Collections.singletonList(student));
-    private static final Exam exam = new Exam("ATTSW", new ArrayList<>());
-    private static final List<Exam> exams = new ArrayList<>(Collections.singletonList(exam));
+    private final Student student = new Student("Andrea", "Puccia");
+    private final List<Student> students = new ArrayList<>(Collections.singletonList(student));
+    private final Exam exam = new Exam("ATTSW", new ArrayList<>());
+    private final List<Exam> exams = new ArrayList<>(Collections.singletonList(exam));
 
     @Before
     public void setUp() {

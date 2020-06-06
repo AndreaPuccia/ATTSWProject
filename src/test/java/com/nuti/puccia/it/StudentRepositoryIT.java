@@ -13,9 +13,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class StudentRepositoryIT {
     private static EntityManagerFactory entityManagerFactory;
-    private static EntityManager entityManager;
+    private EntityManager entityManager;
 
     private StudentRepositoryMysql studentRepository;
+
+    private final Student student1 = new Student("Andrea", "Puccia");
+    private final Student student2 = new Student("Lorenzo", "Nuti");
+    private final Student student3 = new Student("Mario", "Rossi");
 
     @BeforeClass
     public static void setUpClass() {
@@ -49,26 +53,16 @@ public class StudentRepositoryIT {
     }
 
     @Test
-    public void findAllWhenDataBaseIsNotEmpty() {
-        Student student = new Student("Andrea", "Puccia");
-        addTestStudentToDataBase(student);
-        assertThat(studentRepository.findAll()).containsExactly(student);
-    }
-
-    @Test
     public void findAllInOrderWhenDataBaseIsNotEmpty() {
-        Student student1 = new Student("Andrea", "Puccia");
         addTestStudentToDataBase(student1);
-        Student student2 = new Student("Lorenzo", "Nuti");
         addTestStudentToDataBase(student2);
-        assertThat(studentRepository.findAll()).containsExactly(student2, student1);
+        addTestStudentToDataBase(student3);
+        assertThat(studentRepository.findAll()).containsExactly(student2, student1, student3);
     }
 
     @Test
     public void addNewStudentToDatabase() {
-        Student student1 = new Student("Andrea", "Puccia");
         addTestStudentToDataBase(student1);
-        Student student2 = new Student("Lorenzo", "Nuti");
         studentRepository.addStudent(student2);
         assertThat(getStudentFromDataBase()).contains(student1, student2);
         assertThat(entityManager.getTransaction().isActive()).isFalse();
@@ -76,7 +70,6 @@ public class StudentRepositoryIT {
 
     @Test
     public void deleteStudentFromDataBase() {
-        Student student1 = new Student("Andrea", "Puccia");
         addTestStudentToDataBase(student1);
         studentRepository.deleteStudent(student1);
         assertThat(getStudentFromDataBase()).isEmpty();
@@ -85,16 +78,13 @@ public class StudentRepositoryIT {
 
     @Test
     public void findByIdAStudentWhenItDoesNotExist() {
-        Student student = new Student("Andrea", "Puccia");
-        addTestStudentToDataBase(student);
+        addTestStudentToDataBase(student1);
         assertThat(studentRepository.findById(0)).isNull();
     }
 
     @Test
     public void findByIdAStudentWhenItExists() {
-        Student student1 = new Student("Andrea", "Puccia");
         addTestStudentToDataBase(student1);
-        Student student2 = new Student("Lorenzo", "Nuti");
         addTestStudentToDataBase(student2);
         assertThat(studentRepository.findById(student1.getId())).isEqualTo(student1);
     }

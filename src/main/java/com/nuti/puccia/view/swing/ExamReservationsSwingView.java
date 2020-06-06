@@ -33,7 +33,7 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
     private JButton deleteReservationButton;
     private JLabel reservationLabel;
     private JLabel errorLabel;
-    private Controller controller;
+    private transient Controller controller;
 
     public ExamReservationsSwingView() {
         setTitle("Exam Reservations");
