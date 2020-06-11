@@ -5,6 +5,7 @@ import com.nuti.puccia.model.Student;
 import com.nuti.puccia.repository.ExamRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -67,6 +68,12 @@ public class ExamRepositoryMysql implements ExamRepository {
 
     @Override
     public Exam findById(long id) {
-        return entityManager.find(Exam.class, id);
+        TypedQuery<Exam> query = entityManager.createQuery("select e from Exam e where e.id = :id", Exam.class);
+        query.setParameter("id", id);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

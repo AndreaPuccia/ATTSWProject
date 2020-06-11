@@ -27,6 +27,25 @@ import java.util.logging.Logger;
 @Command(mixinStandardHelpOptions = true)
 public class App implements Callable<Void> {
 
+    private static EntityManagerFactory entityManagerFactory = null;
+    private static EntityManager entityManager = null;
+
+    public static EntityManager getEntityManager(Map<String, String> settings) {
+        if (entityManagerFactory == null) {
+            entityManagerFactory = Persistence.createEntityManagerFactory("APP", settings);
+            entityManager = entityManagerFactory.createEntityManager();
+        }
+        return entityManager;
+    }
+
+    public static void closeConnection() {
+        if (entityManagerFactory != null) {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
+    }
+
+
     @Option(names = {"--mysql-host"}, description = "MySQL host address")
     private String mysqlHost = "localhost";
 
@@ -53,8 +72,7 @@ public class App implements Callable<Void> {
         settings.put("javax.persistence.jdbc.user", username);
         settings.put("javax.persistence.jdbc.password", password);
 
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("APP", settings);
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = App.getEntityManager(settings);
 
         EventQueue.invokeLater(() -> {
             try {
@@ -71,10 +89,7 @@ public class App implements Callable<Void> {
             }
         });
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            entityManager.close();
-            entityManagerFactory.close();
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(App::closeConnection));
         return null;
     }
 

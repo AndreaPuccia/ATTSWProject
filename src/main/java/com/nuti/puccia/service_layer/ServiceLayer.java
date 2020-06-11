@@ -24,8 +24,8 @@ public class ServiceLayer {
     public void deleteStudent(Student student) {
         if (studentRepository.findById(student.getId()) == null)
             throw new IllegalArgumentException("Student " + student.toString() + " does not exist!");
-        studentRepository.deleteStudent(student);
         examRepository.deleteStudentReservations(student);
+        studentRepository.deleteStudent(student);
     }
 
     public List<Student> findAllStudents() {

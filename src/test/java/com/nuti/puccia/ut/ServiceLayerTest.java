@@ -7,6 +7,7 @@ import com.nuti.puccia.repository.StudentRepository;
 import com.nuti.puccia.service_layer.ServiceLayer;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -45,8 +46,9 @@ public class ServiceLayerTest {
         Student student = new Student("Andrea", "Puccia");
         when(studentRepository.findById(0)).thenReturn(student);
         serviceLayer.deleteStudent(student);
-        verify(studentRepository).deleteStudent(student);
-        verify(examRepository).deleteStudentReservations(student);
+        InOrder inOrder = inOrder(studentRepository, examRepository);
+        inOrder.verify(examRepository).deleteStudentReservations(student);
+        inOrder.verify(studentRepository).deleteStudent(student);
     }
 
     @Test

@@ -10,6 +10,7 @@ import com.nuti.puccia.service_layer.ServiceLayer;
 import com.nuti.puccia.view.ExamReservationsView;
 import org.junit.*;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 public class ControllerIT {
@@ -71,36 +73,72 @@ public class ControllerIT {
     }
 
     @Test
-    public void updateStudents() {
+    public void updateStudentsOnAdd() {
         studentRepository.addStudent(student1);
         controller.addStudent(student2);
         verify(view).updateStudents(Arrays.asList(student2, student1));
-        controller.deleteStudent(student1);
-        verify(view).updateStudents(Collections.singletonList(student2));
     }
 
     @Test
-    public void updateExams() {
+    public void updateStudentsOnDelete() {
+        studentRepository.addStudent(student1);
+        studentRepository.addStudent(student2);
+        controller.deleteStudent(student1);
+        verify(view).updateStudents(Collections.singletonList(student2));
+        verify(view, never()).showError(Mockito.anyString());
+    }
+
+    @Test
+    public void updateExamsOnAdd() {
         studentRepository.addStudent(student1);
         studentRepository.addStudent(student2);
         examRepository.addExam(exam1);
         controller.addExam(exam2);
         verify(view).updateExams(Arrays.asList(exam2, exam1));
-        controller.deleteExam(exam1);
-        verify(view).updateExams(Collections.singletonList(exam2));
     }
 
     @Test
-    public void updateReservations() {
+    public void updateExamsOnDelete() {
+        studentRepository.addStudent(student1);
+        studentRepository.addStudent(student2);
+        examRepository.addExam(exam1);
+        examRepository.addExam(exam2);
+        controller.deleteExam(exam1);
+        verify(view).updateExams(Collections.singletonList(exam2));
+        verify(view, never()).showError(Mockito.anyString());
+    }
+
+    @Test
+    public void updateReservationsOnAdd() {
         studentRepository.addStudent(student1);
         studentRepository.addStudent(student2);
         examRepository.addExam(exam1);
         controller.addReservation(exam1, student2);
         verify(view).updateReservations();
         assertThat(exam1.getStudents()).containsExactly(student2, student1);
-        controller.deleteStudent(student1);
-        verify(view).updateStudents(Collections.singletonList(student2));
+        verify(view, never()).showError(Mockito.anyString());
     }
 
+    @Test
+    public void updateReservationsOnDelete() {
+        studentRepository.addStudent(student1);
+        studentRepository.addStudent(student2);
+        examRepository.addExam(exam1);
+        examRepository.addReservation(exam1, student2);
+        controller.deleteReservation(exam1, student1);
+        assertThat(exam1.getStudents()).containsExactly(student2);
+        verify(view, never()).showError(Mockito.anyString());
+    }
+
+    @Test
+    public void updateReservationsOnDeleteStudent() {
+        studentRepository.addStudent(student1);
+        studentRepository.addStudent(student2);
+        examRepository.addExam(exam1);
+        examRepository.addReservation(exam1, student2);
+        controller.deleteStudent(student1);
+        assertThat(exam1.getStudents()).containsExactly(student2);
+        verify(view, never()).showError(Mockito.anyString());
+    }
 
 }
