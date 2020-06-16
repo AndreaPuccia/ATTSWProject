@@ -17,9 +17,9 @@ public class StudentRepositoryIT {
 
     private StudentRepositoryMysql studentRepository;
 
-    private final Student student1 = new Student("Andrea", "Puccia");
-    private final Student student2 = new Student("Lorenzo", "Nuti");
-    private final Student student3 = new Student("Mario", "Rossi");
+    private Student student1;
+    private Student student2;
+    private Student student3;
 
     @BeforeClass
     public static void setUpClass() {
@@ -40,6 +40,10 @@ public class StudentRepositoryIT {
         entityManager.getTransaction().commit();
 
         studentRepository = new StudentRepositoryMysql(entityManager);
+
+        student1 = new Student("Andrea", "Puccia");
+        student2 = new Student("Lorenzo", "Nuti");
+        student3 = new Student("Mario", "Rossi");
     }
 
     @After

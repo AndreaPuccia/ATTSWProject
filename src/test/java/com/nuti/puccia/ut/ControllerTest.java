@@ -30,15 +30,20 @@ public class ControllerTest {
 
     private InOrder inOrder;
 
-    private final Student student = new Student("Andrea", "Puccia");
-    private final List<Student> students = new ArrayList<>(Collections.singletonList(student));
-    private final Exam exam = new Exam("ATTSW", new ArrayList<>());
-    private final List<Exam> exams = new ArrayList<>(Collections.singletonList(exam));
+    private Student student;
+    private List<Student> students;
+    private Exam exam;
+    private List<Exam> exams;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         inOrder = inOrder(serviceLayer, view);
+
+        student = new Student("Andrea", "Puccia");
+        students = new ArrayList<>(Collections.singletonList(student));
+        exam = new Exam("ATTSW", new ArrayList<>());
+        exams = new ArrayList<>(Collections.singletonList(exam));
     }
 
     @Test

@@ -25,10 +25,10 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(GUITestRunner.class)
 public class ViewTest extends AssertJSwingJUnitTestCase {
-    private final Student student1 = new Student("Andrea", "Puccia");
-    private final Student student2 = new Student("Lorenzo", "Nuti");
-    private final Exam exam1 = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student1, student2)));
-    private final Exam exam2 = new Exam("Analisi", new ArrayList<>(Collections.singletonList(student1)));
+    private Student student1;
+    private Student student2;
+    private Exam exam1;
+    private Exam exam2;
     private FrameFixture window;
     private ExamReservationsSwingView view;
     @Mock
@@ -44,6 +44,11 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
         });
         window = new FrameFixture(robot(), view);
         window.show();
+
+        student1 = new Student("Andrea", "Puccia");
+        student2 = new Student("Lorenzo", "Nuti");
+        exam1 = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student1, student2)));
+        exam2 = new Exam("Analisi", new ArrayList<>(Collections.singletonList(student1)));
     }
 
 

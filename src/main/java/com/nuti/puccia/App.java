@@ -72,12 +72,12 @@ public class App implements Callable<Void> {
         settings.put("javax.persistence.jdbc.user", username);
         settings.put("javax.persistence.jdbc.password", password);
 
-        EntityManager entityManager = App.getEntityManager(settings);
+        EntityManager em = App.getEntityManager(settings);
 
         EventQueue.invokeLater(() -> {
             try {
-                ExamRepository examRepository = new ExamRepositoryMysql(entityManager);
-                StudentRepository studentRepository = new StudentRepositoryMysql(entityManager);
+                ExamRepository examRepository = new ExamRepositoryMysql(em);
+                StudentRepository studentRepository = new StudentRepositoryMysql(em);
                 ServiceLayer serviceLayer = new ServiceLayer(studentRepository, examRepository);
                 ExamReservationsSwingView view = new ExamReservationsSwingView();
                 Controller controller = new Controller(view, serviceLayer);

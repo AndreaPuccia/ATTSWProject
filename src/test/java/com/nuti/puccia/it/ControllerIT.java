@@ -35,10 +35,10 @@ public class ControllerIT {
     private StudentRepository studentRepository;
     private Controller controller;
 
-    private final Student student1 = new Student("Andrea", "Puccia");
-    private final Student student2 = new Student("Lorenzo", "Nuti");
-    private final Exam exam1 = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student1)));
-    private final Exam exam2 = new Exam("Analisi", new ArrayList<>(Collections.singletonList(student2)));
+    private Student student1;
+    private Student student2;
+    private Exam exam1;
+    private Exam exam2;
 
 
     @BeforeClass
@@ -60,6 +60,11 @@ public class ControllerIT {
         studentRepository = new StudentRepositoryMysql(entityManager);
         ServiceLayer serviceLayer = new ServiceLayer(studentRepository, examRepository);
         controller = new Controller(view, serviceLayer);
+
+        student1 = new Student("Andrea", "Puccia");
+        student2 = new Student("Lorenzo", "Nuti");
+        exam1 = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student1)));
+        exam2 = new Exam("Analisi", new ArrayList<>(Collections.singletonList(student2)));
     }
 
     @After

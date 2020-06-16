@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExamReservationsSwingView extends JFrame implements ExamReservationsView {
+    private static final long serialVersionUID = 1L;
+
     private final DefaultListModel<Exam> examModel = new DefaultListModel<>();
     private final DefaultListModel<Student> reservationModel = new DefaultListModel<>();
     private final DefaultListModel<Student> studentModel = new DefaultListModel<>();
@@ -106,6 +108,7 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
 
 
         DefaultListCellRenderer cellRender = new DefaultListCellRenderer() {
+            private static final long serialVersionUID = 1L;
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
