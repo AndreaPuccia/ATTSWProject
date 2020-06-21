@@ -17,6 +17,4 @@ public interface ExamRepository {
     void deleteStudentReservations(Student student);
 
     List<Exam> findAll();
-
-    Exam findById(long id);
 }

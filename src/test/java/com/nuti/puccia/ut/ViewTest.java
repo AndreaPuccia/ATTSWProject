@@ -19,9 +19,10 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @RunWith(GUITestRunner.class)
 public class ViewTest extends AssertJSwingJUnitTestCase {
@@ -47,8 +48,8 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
 
         student1 = new Student("Andrea", "Puccia");
         student2 = new Student("Lorenzo", "Nuti");
-        exam1 = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student1, student2)));
-        exam2 = new Exam("Analisi", new ArrayList<>(Collections.singletonList(student1)));
+        exam1 = spy(new Exam("ATTSW", new LinkedHashSet<>(Arrays.asList(student1, student2))));
+        exam2 = spy(new Exam("Analisi", new LinkedHashSet<>(Collections.singletonList(student1))));
     }
 
 
@@ -120,8 +121,10 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void enablingAddReservationButtonWhenAStudentAndAnExamAreSelected() {
-        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
-        GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
+        GuiActionRunner.execute(() -> {
+            view.getExamModel().addElement(exam1);
+            view.getStudentModel().addElement(student1);
+        });
         window.list("ExamList").selectItem(0);
         window.list("StudentList").selectItem(0);
         assertThat(window.button("AddReservation").isEnabled()).isTrue();
@@ -131,18 +134,23 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void disablingAddReservationButtonWhenExamOrStudentAreNotSelected() {
-        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
-        GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
+        GuiActionRunner.execute(() -> {
+            view.getExamModel().addElement(exam1);
+            view.getStudentModel().addElement(student1);
+        });
         JListFixture examList = window.list("ExamList");
         JListFixture studentList = window.list("StudentList");
 
         examList.selectItem(0);
+        studentList.selectItem(0);
+        studentList.clearSelection();
+
         assertThat(window.button("AddReservation").isEnabled()).isFalse();
         assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add");
 
+        studentList.selectItem(0);
         examList.clearSelection();
 
-        studentList.selectItem(0);
         assertThat(window.button("AddReservation").isEnabled()).isFalse();
         assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add");
     }
@@ -191,8 +199,10 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void showReservationsForAnExamWhenModelContainsAlreadyAReservation() {
-        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
-        GuiActionRunner.execute(() -> view.getReservationModel().addElement(student1));
+        GuiActionRunner.execute(() -> {
+            view.getExamModel().addElement(exam1);
+            view.getReservationModel().addElement(student1);
+        });
         window.list("ExamList").selectItem(0);
         assertThat(window.list("ReservationList").contents())
                 .containsExactly(student1.toString(), student2.toString());
@@ -201,46 +211,85 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void showExamsOnUpdateExams() {
-        GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
-        GuiActionRunner.execute(() -> view.updateExams(new ArrayList<>(Arrays.asList(exam1, exam2))));
+        GuiActionRunner.execute(() -> {
+            view.getErrorLabel().setText("Error message");
+            view.updateExams(new ArrayList<>(Arrays.asList(exam1, exam2)));
+        });
         assertThat(window.list("ExamList").contents()).containsExactly(exam1.toString(), exam2.toString());
+        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+    }
+
+    @Test
+    @GUITest
+    public void showExamsOnUpdateExamsClearExams() {
+        GuiActionRunner.execute(() -> {
+            view.getErrorLabel().setText("Error message");
+            view.getExamModel().addElement(exam1);
+            view.getExamModel().addElement(exam2);
+            view.updateExams(new ArrayList<>(Arrays.asList(exam2, exam1)));
+        });
+        assertThat(window.list("ExamList").contents()).containsExactly(exam2.toString(), exam1.toString());
+        assertThat(window.list("ExamList").selection()).isEmpty();
+        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+    }
+
+
+    @Test
+    @GUITest
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void showExamsOnUpdateExamsWhenExamSelected() {
+        GuiActionRunner.execute(() -> {
+            view.getExamModel().addElement(exam1);
+            view.getExamModel().addElement(exam2);
+            doReturn(1L).when(exam1).getId();
+            doReturn(2L).when(exam2).getId();
+        });
+        window.list("ExamList").selectItem(0);
         GuiActionRunner.execute(() -> view.updateExams(new ArrayList<>(Arrays.asList(exam2, exam1))));
         assertThat(window.list("ExamList").contents()).containsExactly(exam2.toString(), exam1.toString());
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+        assertThat(window.list("ExamList").selection()).containsExactly(exam1.toString());
+    }
+
+    @Test
+    @GUITest
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void showExamsOnUpdateExamsWhenExamSelectedDoesNotExist() {
+        GuiActionRunner.execute(() -> {
+            view.getExamModel().addElement(exam1);
+            view.getExamModel().addElement(exam2);
+            doReturn(1L).when(exam1).getId();
+            doReturn(2L).when(exam2).getId();
+        });
+        window.list("ExamList").selectItem(0);
+        GuiActionRunner.execute(() -> view.updateExams(new ArrayList<>(Collections.singletonList(exam2))));
+        assertThat(window.list("ExamList").contents()).containsExactly(exam2.toString());
+        assertThat(window.list("ExamList").selection()).isEmpty();
     }
 
     @Test
     @GUITest
     public void showStudentsOnUpdateStudents() {
-        GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
-        GuiActionRunner.execute(() -> view.updateStudents(new ArrayList<>(Arrays.asList(student1, student2))));
+        GuiActionRunner.execute(() -> {
+            view.getErrorLabel().setText("Error message");
+            view.updateStudents(new ArrayList<>(Arrays.asList(student1, student2)));
+        });
         assertThat(window.list("StudentList").contents()).containsExactly(student1.toString(), student2.toString());
-        GuiActionRunner.execute(() -> view.updateStudents(new ArrayList<>(Arrays.asList(student2, student1))));
+        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+    }
+
+    @Test
+    @GUITest
+    public void showStudentsOnUpdateStudentsWhenClearStudents() {
+        GuiActionRunner.execute(() -> {
+            view.getErrorLabel().setText("Error message");
+            view.getStudentModel().addElement(student1);
+            view.getStudentModel().addElement(student2);
+            view.updateStudents(new ArrayList<>(Arrays.asList(student2, student1)));
+        });
         assertThat(window.list("StudentList").contents()).containsExactly(student2.toString(), student1.toString());
         assertThat(window.label("ErrorLabel").text()).isEqualTo("");
     }
 
-    @Test
-    @GUITest
-    public void showReservationsOnUpdateReservations() {
-        GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
-        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
-        window.list("ExamList").selectItem(0);
-        GuiActionRunner.execute(() -> view.getReservationModel().removeElement(student1));
-        GuiActionRunner.execute(() -> view.updateReservations());
-        assertThat(window.list("ReservationList").contents()).containsExactly(student1.toString(), student2.toString());
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
-    }
-
-    @Test
-    @GUITest
-    public void showReservationsOnUpdateReservationsWhenNoExamIsSelected() {
-        GuiActionRunner.execute(() -> view.getErrorLabel().setText("Error message"));
-        GuiActionRunner.execute(() -> view.getReservationModel().addElement(student1));
-        GuiActionRunner.execute(() -> view.updateReservations());
-        assertThat(window.list("ReservationList").contents()).isEmpty();
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
-    }
 
     @Test
     @GUITest
@@ -254,7 +303,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     public void addExamClickDelegatedToController() {
         window.textBox("ExamNameText").enterText("ATTSW");
         window.button("AddExam").click();
-        verify(controller).addExam(new Exam("ATTSW", new ArrayList<>()));
+        verify(controller).addExam(new Exam("ATTSW", new LinkedHashSet<>()));
     }
 
     @Test
@@ -269,8 +318,10 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void addReservationClickDelegatedToController() {
-        GuiActionRunner.execute(() -> view.getExamModel().addElement(exam1));
-        GuiActionRunner.execute(() -> view.getStudentModel().addElement(student1));
+        GuiActionRunner.execute(() -> {
+            view.getExamModel().addElement(exam1);
+            view.getStudentModel().addElement(student1);
+        });
         window.list("ExamList").selectItem(0);
         window.list("StudentList").selectItem(0);
         window.button("AddReservation").click();

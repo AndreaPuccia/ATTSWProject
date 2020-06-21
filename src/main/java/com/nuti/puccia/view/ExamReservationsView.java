@@ -11,7 +11,5 @@ public interface ExamReservationsView {
 
     void updateExams(List<Exam> exams);
 
-    void updateReservations();
-
     void showError(String message);
 }

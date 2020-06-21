@@ -10,6 +10,4 @@ public interface StudentRepository {
     void addStudent(Student student);
 
     List<Student> findAll();
-
-    Student findById(long id);
 }

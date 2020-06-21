@@ -23,11 +23,11 @@ public class Controller {
     public void deleteStudent(Student student) {
         try {
             serviceLayer.deleteStudent(student);
+            showAllExams();
             showAllStudents();
-            view.updateReservations();
-        } catch (IllegalArgumentException e) {
+        } catch (Error e) {
+            showAllExams();
             showAllStudents();
-            view.updateReservations();
             view.showError(e.getMessage());
         }
     }
@@ -45,8 +45,9 @@ public class Controller {
         try {
             serviceLayer.deleteExam(exam);
             showAllExams();
-        } catch (IllegalArgumentException e) {
+        } catch (Error e) {
             showAllExams();
+            showAllStudents();
             view.showError(e.getMessage());
         }
     }
@@ -58,20 +59,16 @@ public class Controller {
     public void addReservation(Exam exam, Student student) {
         try {
             serviceLayer.addReservation(exam, student);
-            view.updateReservations();
-        } catch (IllegalArgumentException e) {
-            view.updateReservations();
+            showAllExams();
+        } catch (Error e) {
+            showAllExams();
+            showAllStudents();
             view.showError(e.getMessage());
         }
     }
 
     public void deleteReservation(Exam exam, Student student) {
-        try {
-            serviceLayer.deleteReservation(exam, student);
-            view.updateReservations();
-        } catch (IllegalArgumentException e) {
-            view.updateReservations();
-            view.showError(e.getMessage());
-        }
+        serviceLayer.deleteReservation(exam, student);
+        showAllExams();
     }
 }

@@ -248,6 +248,7 @@
                         <param>${project.groupId}.model.Student</param>
                         <param>${project.groupId}.repository.mysql.ExamRepositoryMysql</param>
                         <param>${project.groupId}.repository.mysql.StudentRepositoryMysql</param>
+                        <param>${project.groupId}.transaction_manager.mysql.TransactionManagerMysql</param>
                         <param>${project.groupId}.view.swing.*</param>
                     </excludedClasses>
                     <excludedTestClasses>

@@ -9,14 +9,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class ExamRepositoryIT {
+public class ExamRepositoryMysqlIT {
     private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
 
@@ -63,46 +60,44 @@ public class ExamRepositoryIT {
 
     @Test
     public void findAllInOrderWhenDataBaseIsNotEmpty() {
-        Exam exam1 = new Exam("ATTSW", new ArrayList<>());
+        Exam exam1 = new Exam("ATTSW", new LinkedHashSet<>());
         addTestExamToDataBase(exam1);
-        Exam exam2 = new Exam("Analisi", new ArrayList<>());
+        Exam exam2 = new Exam("Analisi", new LinkedHashSet<>());
         addTestExamToDataBase(exam2);
         assertThat(examRepository.findAll()).containsExactly(exam2, exam1);
     }
 
     @Test
-    public void addNewExamToDatabase() {
-        Exam exam1 = new Exam("ATTSW", new ArrayList<>());
+    public void findAllRefreshExamStudents() {
+        addTestStudentToDataBase(student1);
+        addTestStudentToDataBase(student2);
+        Exam exam1 = new Exam("ATTSW", new LinkedHashSet<>(Arrays.asList(student1, student2)));
         addTestExamToDataBase(exam1);
-        Exam exam2 = new Exam("Analisi", new ArrayList<>());
+        assertThat(examRepository.findAll()).containsExactly(exam1);
+        assertThat(exam1.getStudents()).containsExactly(student2, student1);
+    }
+
+    @Test
+    public void addNewExamToDatabase() {
+        Exam exam1 = new Exam("ATTSW", new LinkedHashSet<>());
+        addTestExamToDataBase(exam1);
+        Exam exam2 = new Exam("Analisi", new LinkedHashSet<>());
+        entityManager.getTransaction().begin();
         examRepository.addExam(exam2);
-        assertThat(getExamsFromDataBase()).contains(exam1, exam2);
-        assertThat(entityManager.getTransaction().isActive()).isFalse();
+        entityManager.getTransaction().commit();
+        assertThat(getExamsFromDataBase()).containsExactlyInAnyOrder(exam1, exam2);
     }
 
     @Test
     public void deleteExamFromDataBase() {
-        Exam exam = new Exam("ATTSW", new ArrayList<>());
-        addTestExamToDataBase(exam);
-        examRepository.deleteExam(exam);
-        assertThat(getExamsFromDataBase()).isEmpty();
-        assertThat(entityManager.getTransaction().isActive()).isFalse();
-    }
-
-    @Test
-    public void findByIdAnExamWhenItDoesNotExist() {
-        Exam exam = new Exam("ATTSW", new ArrayList<>());
-        addTestExamToDataBase(exam);
-        assertThat(examRepository.findById(0)).isNull();
-    }
-
-    @Test
-    public void findByIdAnExamWhenItExists() {
-        Exam exam1 = new Exam("ATTSW", new ArrayList<>());
+        Exam exam1 = new Exam("ATTSW", new LinkedHashSet<>());
         addTestExamToDataBase(exam1);
-        Exam exam2 = new Exam("Analisi", new ArrayList<>());
+        Exam exam2 = new Exam("Analisi", new LinkedHashSet<>());
         addTestExamToDataBase(exam2);
-        assertThat(examRepository.findById(exam1.getId())).isEqualTo(exam1);
+        entityManager.getTransaction().begin();
+        examRepository.deleteExam(exam1);
+        entityManager.getTransaction().commit();
+        assertThat(getExamsFromDataBase()).containsExactly(exam2);
     }
 
     @Test
@@ -111,11 +106,11 @@ public class ExamRepositoryIT {
         addTestStudentToDataBase(student2);
         addTestStudentToDataBase(student3);
 
-        Exam exam = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student2, student3)));
+        Exam exam = new Exam("ATTSW", new LinkedHashSet<>(Arrays.asList(student2, student3)));
         addTestExamToDataBase(exam);
+        entityManager.getTransaction().begin();
         examRepository.addReservation(exam, student1);
-        assertThat(entityManager.getTransaction().isActive()).isFalse();
-        assertThat(exam.getStudents()).containsExactly(student2, student1, student3);
+        entityManager.getTransaction().commit();
         entityManager.refresh(exam);
         assertThat(exam.getStudents()).containsExactly(student2, student1, student3);
     }
@@ -123,23 +118,23 @@ public class ExamRepositoryIT {
     @Test
     public void addExistingReservationToDataBase() {
         addTestStudentToDataBase(student1);
-        Exam exam = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student1)));
+        Exam exam = new Exam("ATTSW", new LinkedHashSet<>(Collections.singletonList(student1)));
         addTestExamToDataBase(exam);
-        assertThatThrownBy(() -> examRepository.addReservation(exam, student1))
-                .isInstanceOf(IllegalArgumentException.class);
-        assertThat(entityManager.getTransaction().isActive()).isFalse();
+        entityManager.getTransaction().begin();
+        assertThatThrownBy(() -> examRepository.addReservation(exam, student1)).isInstanceOf(Error.class);
+        entityManager.getTransaction().commit();
         entityManager.refresh(exam);
         assertThat(exam.getStudents()).containsExactly(student1);
     }
 
     @Test
     public void deleteReservationFromDataBase() {
-        Student student = new Student("Andrea", "Puccia");
-        addTestStudentToDataBase(student);
-        Exam exam = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student)));
+        addTestStudentToDataBase(student1);
+        Exam exam = new Exam("ATTSW", new LinkedHashSet<>(Collections.singletonList(student1)));
         addTestExamToDataBase(exam);
-        examRepository.deleteReservation(exam, student);
-        assertThat(entityManager.getTransaction().isActive()).isFalse();
+        entityManager.getTransaction().begin();
+        examRepository.deleteReservation(exam, student1);
+        entityManager.getTransaction().commit();
         entityManager.refresh(exam);
         assertThat(exam.getStudents()).isEmpty();
     }
@@ -148,11 +143,11 @@ public class ExamRepositoryIT {
     public void deleteReservationFromDataBaseWhenStudentNotPresent() {
         addTestStudentToDataBase(student1);
         addTestStudentToDataBase(student2);
-        Exam exam = new Exam("ATTSW", new ArrayList<>(Collections.singletonList(student1)));
+        Exam exam = new Exam("ATTSW", new LinkedHashSet<>(Collections.singletonList(student1)));
         addTestExamToDataBase(exam);
-        assertThatThrownBy(() -> examRepository.deleteReservation(exam, student2))
-                .isInstanceOf(IllegalArgumentException.class);
-        assertThat(entityManager.getTransaction().isActive()).isFalse();
+        entityManager.getTransaction().begin();
+        examRepository.deleteReservation(exam, student2);
+        entityManager.getTransaction().commit();
         entityManager.refresh(exam);
         assertThat(exam.getStudents()).containsExactly(student1);
     }
@@ -163,13 +158,14 @@ public class ExamRepositoryIT {
         addTestStudentToDataBase(student2);
         addTestStudentToDataBase(student3);
 
-        Exam exam1 = new Exam("ATTSW", new ArrayList<>(Arrays.asList(student1, student2)));
+        Exam exam1 = new Exam("ATTSW", new LinkedHashSet<>(Arrays.asList(student1, student2)));
         addTestExamToDataBase(exam1);
-        Exam exam2 = new Exam("Analisi", new ArrayList<>(Arrays.asList(student1, student3)));
+        Exam exam2 = new Exam("Analisi", new LinkedHashSet<>(Arrays.asList(student1, student3)));
         addTestExamToDataBase(exam2);
 
+        entityManager.getTransaction().begin();
         examRepository.deleteStudentReservations(student1);
-        assertThat(entityManager.getTransaction().isActive()).isFalse();
+        entityManager.getTransaction().commit();
         entityManager.refresh(exam1);
         entityManager.refresh(exam2);
         assertThat(exam1.getStudents()).containsExactly(student2);
@@ -191,6 +187,5 @@ public class ExamRepositoryIT {
 
     private List<Exam> getExamsFromDataBase() {
         return entityManager.createQuery("select e from Exam e", Exam.class).getResultList();
-
     }
 }

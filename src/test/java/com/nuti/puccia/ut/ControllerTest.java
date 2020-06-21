@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -42,13 +43,14 @@ public class ControllerTest {
 
         student = new Student("Andrea", "Puccia");
         students = new ArrayList<>(Collections.singletonList(student));
-        exam = new Exam("ATTSW", new ArrayList<>());
+        exam = new Exam("ATTSW", new LinkedHashSet<>());
         exams = new ArrayList<>(Collections.singletonList(exam));
+        when(serviceLayer.findAllStudents()).thenReturn(students);
+        when(serviceLayer.findAllExams()).thenReturn(exams);
     }
 
     @Test
     public void addStudent() {
-        when(serviceLayer.findAllStudents()).thenReturn(students);
         controller.addStudent(student);
         inOrder.verify(serviceLayer).addStudent(student);
         inOrder.verify(view).updateStudents(students);
@@ -57,35 +59,31 @@ public class ControllerTest {
 
     @Test
     public void deleteStudentWhenItExists() {
-        when(serviceLayer.findAllStudents()).thenReturn(students);
         controller.deleteStudent(student);
         inOrder.verify(serviceLayer).deleteStudent(student);
+        inOrder.verify(view).updateExams(exams);
         inOrder.verify(view).updateStudents(students);
-        inOrder.verify(view).updateReservations();
     }
 
 
     @Test
     public void deleteStudentWhenItDoesNotExist() {
-        when(serviceLayer.findAllStudents()).thenReturn(students);
-        doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).deleteStudent(student);
+        doThrow(new Error("Error message")).when(serviceLayer).deleteStudent(student);
         controller.deleteStudent(student);
+        inOrder.verify(view).updateExams(exams);
         inOrder.verify(view).updateStudents(students);
-        inOrder.verify(view).updateReservations();
         inOrder.verify(view).showError("Error message");
     }
 
 
     @Test
     public void showAllStudents() {
-        when(serviceLayer.findAllStudents()).thenReturn(students);
         controller.showAllStudents();
         verify(view).updateStudents(students);
     }
 
     @Test
     public void addExam() {
-        when(serviceLayer.findAllExams()).thenReturn(exams);
         controller.addExam(exam);
         inOrder.verify(serviceLayer).addExam(exam);
         inOrder.verify(view).updateExams(exams);
@@ -94,7 +92,6 @@ public class ControllerTest {
 
     @Test
     public void deleteExamWhenItExists() {
-        when(serviceLayer.findAllExams()).thenReturn(exams);
         controller.deleteExam(exam);
         inOrder.verify(serviceLayer).deleteExam(exam);
         inOrder.verify(view).updateExams(exams);
@@ -103,17 +100,16 @@ public class ControllerTest {
 
     @Test
     public void deleteExamWhenItDoesNotExist() {
-        when(serviceLayer.findAllExams()).thenReturn(exams);
-        doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).deleteExam(exam);
+        doThrow(new Error("Error message")).when(serviceLayer).deleteExam(exam);
         controller.deleteExam(exam);
         inOrder.verify(view).updateExams(exams);
+        inOrder.verify(view).updateStudents(students);
         inOrder.verify(view).showError("Error message");
     }
 
 
     @Test
     public void showAllExams() {
-        when(serviceLayer.findAllExams()).thenReturn(exams);
         controller.showAllExams();
         verify(view).updateExams(exams);
     }
@@ -122,30 +118,23 @@ public class ControllerTest {
     public void addReservationWhenItDoesNotExist() {
         controller.addReservation(exam, student);
         inOrder.verify(serviceLayer).addReservation(exam, student);
-        inOrder.verify(view).updateReservations();
+        inOrder.verify(view).updateExams(exams);
     }
 
     @Test
     public void addReservationWhenItExists() {
-        doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).addReservation(exam, student);
+        doThrow(new Error("Error message")).when(serviceLayer).addReservation(exam, student);
         controller.addReservation(exam, student);
-        inOrder.verify(view).updateReservations();
+        inOrder.verify(view).updateExams(exams);
+        inOrder.verify(view).updateStudents(students);
         inOrder.verify(view).showError("Error message");
     }
 
     @Test
-    public void deleteReservationWhenItExists() {
+    public void deleteReservation() {
         controller.deleteReservation(exam, student);
         inOrder.verify(serviceLayer).deleteReservation(exam, student);
-        inOrder.verify(view).updateReservations();
-    }
-
-    @Test
-    public void deleteReservationWhenItDoesNotExist() {
-        doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).deleteReservation(exam, student);
-        controller.deleteReservation(exam, student);
-        inOrder.verify(view).updateReservations();
-        inOrder.verify(view).showError("Error message");
+        inOrder.verify(view).updateExams(exams);
     }
 
 }

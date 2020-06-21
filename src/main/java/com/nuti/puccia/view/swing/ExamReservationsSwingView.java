@@ -11,7 +11,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class ExamReservationsSwingView extends JFrame implements ExamReservationsView {
@@ -75,8 +75,10 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
             if (examsList.getSelectedIndex() != -1 && studentsList.getSelectedIndex() != -1) {
                 addReservationButton.setEnabled(true);
                 reservationLabel.setText(studentsList.getSelectedValue().toString());
-            } else
+            } else {
+                addReservationButton.setEnabled(false);
                 reservationLabel.setText("Select a student to add");
+            }
         };
 
         // Enabling add reservation button and change reservation label when a student and an exam are selected
@@ -87,8 +89,11 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
 
         // Show reservation for an exam
         examsList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting())
-                updateReservations();
+            if (!e.getValueIsAdjusting()) {
+                reservationModel.clear();
+                if (examsList.getSelectedIndex() != -1)
+                    examsList.getSelectedValue().getStudents().forEach(reservationModel::addElement);
+            }
         });
 
         // Enabling delete exam button when an exam is selected
@@ -109,6 +114,7 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
 
         DefaultListCellRenderer cellRender = new DefaultListCellRenderer() {
             private static final long serialVersionUID = 1L;
+
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
@@ -125,7 +131,7 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
         reservationsList.setCellRenderer(cellRender);
 
         // Click listeners
-        addExamButton.addActionListener(e -> controller.addExam(new Exam(examName.getText(), new ArrayList<>())));
+        addExamButton.addActionListener(e -> controller.addExam(new Exam(examName.getText(), new LinkedHashSet<>())));
 
         addStudentButton.addActionListener(e ->
                 controller.addStudent(new Student(studentName.getText(), studentSurname.getText())));
@@ -170,18 +176,18 @@ public class ExamReservationsSwingView extends JFrame implements ExamReservation
 
     @Override
     public void updateExams(List<Exam> exams) {
+        Exam selected = examsList.getSelectedValue();
         examModel.clear();
         exams.forEach(examModel::addElement);
+
+        exams.stream()
+                .filter(exam -> selected != null && exam.getId() == selected.getId())
+                .findFirst()
+                .ifPresent(exam -> examsList.setSelectedValue(exam, true));
+
         errorLabel.setText("");
     }
 
-    @Override
-    public void updateReservations() {
-        reservationModel.clear();
-        if (examsList.getSelectedIndex() != -1)
-            examsList.getSelectedValue().getStudents().forEach(reservationModel::addElement);
-        errorLabel.setText("");
-    }
 
     @Override
     public void showError(String message) {

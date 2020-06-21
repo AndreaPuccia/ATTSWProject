@@ -70,8 +70,8 @@ public class examReservationSteps {
         Student reservationStudent = new Student(reservationName, reservationSurname);
         addStudentToDataBase(selectedStudent);
         addStudentToDataBase(reservationStudent);
-        addExamToDataBase(new Exam(selectedExam, new ArrayList<>(Collections.singletonList(reservationStudent))));
-        addExamToDataBase(new Exam(otherExam, new ArrayList<>()));
+        addExamToDataBase(new Exam(selectedExam, new LinkedHashSet<>(Collections.singletonList(reservationStudent))));
+        addExamToDataBase(new Exam(otherExam, new LinkedHashSet<>()));
     }
 
     @Given("The Exam Reservation View is shown")

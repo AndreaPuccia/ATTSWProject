@@ -5,8 +5,8 @@ import com.nuti.puccia.model.Student;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,11 +14,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class ExamTest {
 
     private Exam exam;
-    private List<Student> students;
+    private Set<Student> students;
 
     @Before
     public void setup() {
-        students = new ArrayList<>();
+        students = new LinkedHashSet<>();
         exam = new Exam("ATTSW", students);
     }
 
@@ -34,7 +34,7 @@ public class ExamTest {
         Student student = new Student("Andrea", "Puccia");
         students.add(student);
         assertThatThrownBy(() -> exam.addStudent(student))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(Error.class)
                 .hasMessage("Student " + student.toString() + " already present in " + exam.toString() + "!");
     }
 
@@ -51,9 +51,7 @@ public class ExamTest {
     @Test
     public void removeStudentFromExamWithEmptyStudents() {
         Student student = new Student("Andrea", "Puccia");
-        assertThatThrownBy(() -> exam.removeStudent(student))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Student " + student.toString() + " not present in " + exam.toString() + "!");
+        exam.removeStudent(student);
         assertThat(students).isEmpty();
     }
 
@@ -62,9 +60,7 @@ public class ExamTest {
         Student student1 = new Student("Lorenzo", "Nuti");
         students.add(student1);
         Student student2 = new Student("Andrea", "Puccia");
-        assertThatThrownBy(() -> exam.removeStudent(student2))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Student " + student2.toString() + " not present in " + exam.toString() + "!");
+        exam.removeStudent(student2);
         assertThat(students).containsExactly(student1);
     }
 }

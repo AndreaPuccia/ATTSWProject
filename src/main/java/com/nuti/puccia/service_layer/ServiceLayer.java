@@ -2,55 +2,80 @@ package com.nuti.puccia.service_layer;
 
 import com.nuti.puccia.model.Exam;
 import com.nuti.puccia.model.Student;
-import com.nuti.puccia.repository.ExamRepository;
-import com.nuti.puccia.repository.StudentRepository;
+import com.nuti.puccia.transaction_manager.TransactionManager;
 
 import java.util.List;
 
 public class ServiceLayer {
 
-    private final StudentRepository studentRepository;
-    private final ExamRepository examRepository;
+    private final TransactionManager transactionManager;
 
-    public ServiceLayer(StudentRepository studentRepository, ExamRepository examRepository) {
-        this.studentRepository = studentRepository;
-        this.examRepository = examRepository;
-    }
-
-    public void addStudent(Student student) {
-        studentRepository.addStudent(student);
-    }
-
-    public void deleteStudent(Student student) {
-        if (studentRepository.findById(student.getId()) == null)
-            throw new IllegalArgumentException("Student " + student.toString() + " does not exist!");
-        examRepository.deleteStudentReservations(student);
-        studentRepository.deleteStudent(student);
+    public ServiceLayer(TransactionManager manger) {
+        transactionManager = manger;
     }
 
     public List<Student> findAllStudents() {
-        return studentRepository.findAll();
-    }
-
-    public void addExam(Exam exam) {
-        examRepository.addExam(exam);
-    }
-
-    public void deleteExam(Exam exam) {
-        if (examRepository.findById(exam.getId()) == null)
-            throw new IllegalArgumentException("Exam " + exam.toString() + " does not exist!");
-        examRepository.deleteExam(exam);
+        return transactionManager.executeTransaction(
+                (examRepository, studentRepository) -> studentRepository.findAll());
     }
 
     public List<Exam> findAllExams() {
-        return examRepository.findAll();
+        return transactionManager.executeTransaction(
+                (examRepository, studentRepository) -> examRepository.findAll());
     }
 
-    public void addReservation(Exam exam, Student student) {
-        examRepository.addReservation(exam, student);
+    public void addStudent(Student student) {
+        transactionManager.executeTransaction(
+                (examRepository, studentRepository) -> {
+                    studentRepository.addStudent(student);
+                    return null;
+                });
+    }
+
+    public void addExam(Exam exam) {
+        transactionManager.executeTransaction(
+                (examRepository, studentRepository) -> {
+                    examRepository.addExam(exam);
+                    return null;
+                });
     }
 
     public void deleteReservation(Exam exam, Student student) {
-        examRepository.deleteReservation(exam, student);
+        transactionManager.executeTransaction(
+                (examRepository, studentRepository) -> {
+                    examRepository.deleteReservation(exam, student);
+                    return null;
+                });
     }
+
+    public void deleteStudent(Student student) {
+        transactionManager.executeTransaction(
+                (examRepository, studentRepository) -> {
+                    studentRepository.deleteStudent(student);
+                    examRepository.deleteStudentReservations(student);
+                    return null;
+                }, "Student " + student.toString() + " does not exist!");
+
+    }
+
+
+    public void deleteExam(Exam exam) {
+        transactionManager.executeTransaction(
+                (examRepository, studentRepository) -> {
+                    examRepository.deleteExam(exam);
+                    return null;
+                }, "Exam " + exam.toString() + " does not exist!");
+
+    }
+
+
+    public void addReservation(Exam exam, Student student) {
+        transactionManager.executeTransaction(
+                (examRepository, studentRepository) -> {
+                    examRepository.addReservation(exam, student);
+                    return null;
+                }, "Student " + student.toString() + " already present in " + exam.toString() + "!");
+    }
+
+
 }

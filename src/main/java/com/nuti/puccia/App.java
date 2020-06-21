@@ -1,11 +1,9 @@
 package com.nuti.puccia;
 
 import com.nuti.puccia.controller.Controller;
-import com.nuti.puccia.repository.ExamRepository;
-import com.nuti.puccia.repository.StudentRepository;
-import com.nuti.puccia.repository.mysql.ExamRepositoryMysql;
-import com.nuti.puccia.repository.mysql.StudentRepositoryMysql;
 import com.nuti.puccia.service_layer.ServiceLayer;
+import com.nuti.puccia.transaction_manager.TransactionManager;
+import com.nuti.puccia.transaction_manager.mysql.TransactionManagerMysql;
 import com.nuti.puccia.view.swing.ExamReservationsSwingView;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -76,9 +74,8 @@ public class App implements Callable<Void> {
 
         EventQueue.invokeLater(() -> {
             try {
-                ExamRepository examRepository = new ExamRepositoryMysql(em);
-                StudentRepository studentRepository = new StudentRepositoryMysql(em);
-                ServiceLayer serviceLayer = new ServiceLayer(studentRepository, examRepository);
+                TransactionManager transactionManager = new TransactionManagerMysql(em);
+                ServiceLayer serviceLayer = new ServiceLayer(transactionManager);
                 ExamReservationsSwingView view = new ExamReservationsSwingView();
                 Controller controller = new Controller(view, serviceLayer);
                 view.setController(controller);
