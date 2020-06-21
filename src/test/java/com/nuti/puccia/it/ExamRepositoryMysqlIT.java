@@ -121,7 +121,7 @@ public class ExamRepositoryMysqlIT {
         Exam exam = new Exam("ATTSW", new LinkedHashSet<>(Collections.singletonList(student1)));
         addTestExamToDataBase(exam);
         entityManager.getTransaction().begin();
-        assertThatThrownBy(() -> examRepository.addReservation(exam, student1)).isInstanceOf(Error.class);
+        assertThatThrownBy(() -> examRepository.addReservation(exam, student1)).isInstanceOf(IllegalArgumentException.class);
         entityManager.getTransaction().commit();
         entityManager.refresh(exam);
         assertThat(exam.getStudents()).containsExactly(student1);

@@ -68,7 +68,7 @@ public class ControllerTest {
 
     @Test
     public void deleteStudentWhenItDoesNotExist() {
-        doThrow(new Error("Error message")).when(serviceLayer).deleteStudent(student);
+        doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).deleteStudent(student);
         controller.deleteStudent(student);
         inOrder.verify(view).updateExams(exams);
         inOrder.verify(view).updateStudents(students);
@@ -100,7 +100,7 @@ public class ControllerTest {
 
     @Test
     public void deleteExamWhenItDoesNotExist() {
-        doThrow(new Error("Error message")).when(serviceLayer).deleteExam(exam);
+        doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).deleteExam(exam);
         controller.deleteExam(exam);
         inOrder.verify(view).updateExams(exams);
         inOrder.verify(view).updateStudents(students);
@@ -123,7 +123,7 @@ public class ControllerTest {
 
     @Test
     public void addReservationWhenItExists() {
-        doThrow(new Error("Error message")).when(serviceLayer).addReservation(exam, student);
+        doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).addReservation(exam, student);
         controller.addReservation(exam, student);
         inOrder.verify(view).updateExams(exams);
         inOrder.verify(view).updateStudents(students);

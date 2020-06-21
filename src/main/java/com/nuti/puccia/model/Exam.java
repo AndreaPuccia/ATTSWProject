@@ -60,7 +60,7 @@ public class Exam {
 
     public void addStudent(Student student) {
         if (students.contains(student))
-            throw new Error("Student " + student.toString() + " already present in " + this.toString() + "!");
+            throw new IllegalArgumentException("Student " + student.toString() + " already present in " + this.toString() + "!");
         students.add(student);
     }
 

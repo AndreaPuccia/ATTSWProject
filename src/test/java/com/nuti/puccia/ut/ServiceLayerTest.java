@@ -101,10 +101,10 @@ public class ServiceLayerTest {
         when(transactionManager.executeTransaction(any(), anyString())).thenAnswer(
                 answer((TransactionFunction<?> code) -> {
                     code.apply(examRepository, studentRepository);
-                    throw new Error("Error message");
+                    throw new IllegalArgumentException("Error message");
                 }));
         assertThatThrownBy(() -> serviceLayer.deleteStudent(student))
-                .isInstanceOf(Error.class).hasMessage("Error message");
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("Error message");
         verify(studentRepository).deleteStudent(student);
         verify(examRepository).deleteStudentReservations(student);
         verify(transactionManager).executeTransaction(any(),
@@ -128,9 +128,9 @@ public class ServiceLayerTest {
         when(transactionManager.executeTransaction(any(), anyString())).thenAnswer(
                 answer((TransactionFunction<?> code) -> {
                     code.apply(examRepository, studentRepository);
-                    throw new Error("Error message");
+                    throw new IllegalArgumentException("Error message");
                 }));
-        assertThatThrownBy(() -> serviceLayer.deleteExam(exam)).isInstanceOf(Error.class).hasMessage("Error message");
+        assertThatThrownBy(() -> serviceLayer.deleteExam(exam)).isInstanceOf(IllegalArgumentException.class).hasMessage("Error message");
         verify(examRepository).deleteExam(exam);
         verify(transactionManager).executeTransaction(any(), eq("Exam " + exam.toString() + " does not exist!"));
     }
@@ -154,9 +154,9 @@ public class ServiceLayerTest {
         when(transactionManager.executeTransaction(any(), anyString())).thenAnswer(
                 answer((TransactionFunction<?> code) -> {
                     code.apply(examRepository, studentRepository);
-                    throw new Error("Error message");
+                    throw new IllegalArgumentException("Error message");
                 }));
-        assertThatThrownBy(() -> serviceLayer.addReservation(exam, student)).isInstanceOf(Error.class)
+        assertThatThrownBy(() -> serviceLayer.addReservation(exam, student)).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Error message");
         verify(examRepository).addReservation(exam, student);
         verify(transactionManager).executeTransaction(any(),

@@ -26,9 +26,9 @@ public class TransactionManagerMysql implements TransactionManager {
             T result = code.apply(new ExamRepositoryMysql(entityManager), new StudentRepositoryMysql(entityManager));
             entityManager.getTransaction().commit();
             return result;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new Error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 

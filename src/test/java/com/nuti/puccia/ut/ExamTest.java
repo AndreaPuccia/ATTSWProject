@@ -34,7 +34,7 @@ public class ExamTest {
         Student student = new Student("Andrea", "Puccia");
         students.add(student);
         assertThatThrownBy(() -> exam.addStudent(student))
-                .isInstanceOf(Error.class)
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Student " + student.toString() + " already present in " + exam.toString() + "!");
     }
 

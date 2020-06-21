@@ -25,7 +25,7 @@ public class Controller {
             serviceLayer.deleteStudent(student);
             showAllExams();
             showAllStudents();
-        } catch (Error e) {
+        } catch (IllegalArgumentException e) {
             showAllExams();
             showAllStudents();
             view.showError(e.getMessage());
@@ -45,7 +45,7 @@ public class Controller {
         try {
             serviceLayer.deleteExam(exam);
             showAllExams();
-        } catch (Error e) {
+        } catch (IllegalArgumentException e) {
             showAllExams();
             showAllStudents();
             view.showError(e.getMessage());
@@ -60,7 +60,7 @@ public class Controller {
         try {
             serviceLayer.addReservation(exam, student);
             showAllExams();
-        } catch (Error e) {
+        } catch (IllegalArgumentException e) {
             showAllExams();
             showAllStudents();
             view.showError(e.getMessage());

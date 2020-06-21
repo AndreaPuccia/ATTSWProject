@@ -81,7 +81,7 @@ public class TransactionManagerMysqlIT {
             assertThat(studentRepository).isInstanceOf(StudentRepositoryMysql.class);
             entityManager.persist(student);
             throw new RuntimeException("Exception");
-        })).isInstanceOf(Error.class).hasMessage("Transaction rolled back");
+        })).isInstanceOf(IllegalArgumentException.class).hasMessage("Transaction rolled back");
         assertThat(entityManager.getTransaction().isActive()).isFalse();
         assertThat(getStudentsFromDataBase()).isEmpty();
     }
@@ -94,7 +94,7 @@ public class TransactionManagerMysqlIT {
             assertThat(studentRepository).isInstanceOf(StudentRepositoryMysql.class);
             entityManager.persist(student);
             throw new RuntimeException("Exception");
-        }, "Error message")).isInstanceOf(Error.class).hasMessage("Error message");
+        }, "Error message")).isInstanceOf(IllegalArgumentException.class).hasMessage("Error message");
         assertThat(entityManager.getTransaction().isActive()).isFalse();
         assertThat(getStudentsFromDataBase()).isEmpty();
     }
