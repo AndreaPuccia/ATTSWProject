@@ -159,8 +159,8 @@ public class ViewIT extends AssertJSwingJUnitTestCase {
         studentRepository.addStudent(student1);
         studentRepository.addStudent(student2);
         examRepository.addExam(exam1);
-        examRepository.addReservation(exam1,student2);
-        examRepository.addReservation(exam1,student1);
+        examRepository.addReservation(exam1, student2);
+        examRepository.addReservation(exam1, student1);
         entityManager.getTransaction().commit();
         GuiActionRunner.execute(() -> controller.showAllExams());
 

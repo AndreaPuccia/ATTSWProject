@@ -9,6 +9,7 @@ import com.nuti.puccia.transaction_manager.TransactionFunction;
 import com.nuti.puccia.transaction_manager.TransactionManager;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -90,8 +91,9 @@ public class ServiceLayerTest {
         when(transactionManager.executeTransaction(any(), anyString())).thenAnswer(
                 answer((TransactionFunction<?> code) -> code.apply(examRepository, studentRepository)));
         serviceLayer.deleteStudent(student);
-        verify(studentRepository).deleteStudent(student);
-        verify(examRepository).deleteStudentReservations(student);
+        InOrder inOrder = inOrder(studentRepository, examRepository);
+        inOrder.verify(examRepository).deleteStudentReservations(student);
+        inOrder.verify(studentRepository).deleteStudent(student);
         verify(transactionManager).executeTransaction(any(), anyString());
     }
 
@@ -105,8 +107,9 @@ public class ServiceLayerTest {
                 }));
         assertThatThrownBy(() -> serviceLayer.deleteStudent(student))
                 .isInstanceOf(IllegalArgumentException.class).hasMessage("Error message");
-        verify(studentRepository).deleteStudent(student);
-        verify(examRepository).deleteStudentReservations(student);
+        InOrder inOrder = inOrder(studentRepository, examRepository);
+        inOrder.verify(examRepository).deleteStudentReservations(student);
+        inOrder.verify(studentRepository).deleteStudent(student);
         verify(transactionManager).executeTransaction(any(),
                 eq("Student " + student.toString() + " does not exist!"));
     }

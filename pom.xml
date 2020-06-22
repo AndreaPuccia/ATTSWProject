@@ -27,6 +27,7 @@
         <assertj.swing.version>3.9.2</assertj.swing.version>
         <mockito.version>3.3.3</mockito.version>
         <jbehave.version>4.6.3</jbehave.version>
+        <awaitility.version>4.0.2</awaitility.version>
 
         <!-- Sonar rules -->
         <sonar.issue.ignore.multicriteria>e11,e12,e13,e14,e15,e16</sonar.issue.ignore.multicriteria>
@@ -150,6 +151,13 @@
             <groupId>org.jbehave</groupId>
             <artifactId>jbehave-core</artifactId>
             <version>${jbehave.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
             <scope>test</scope>
         </dependency>
 

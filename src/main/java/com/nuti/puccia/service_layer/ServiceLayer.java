@@ -51,8 +51,8 @@ public class ServiceLayer {
     public void deleteStudent(Student student) {
         transactionManager.executeTransaction(
                 (examRepository, studentRepository) -> {
-                    studentRepository.deleteStudent(student);
                     examRepository.deleteStudentReservations(student);
+                    studentRepository.deleteStudent(student);
                     return null;
                 }, "Student " + student.toString() + " does not exist!");
 
