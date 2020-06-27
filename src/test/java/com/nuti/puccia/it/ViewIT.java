@@ -172,7 +172,7 @@ public class ViewIT extends AssertJSwingJUnitTestCase {
         window.button("DeleteReservation").click();
         assertThat(window.list("ExamList").selection()).containsExactly(exam1.toString());
         assertThat(window.list("ReservationList").contents()).containsExactly(student1.toString());
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+        assertThat(window.label("ErrorLabel").text()).isEmpty();
     }
 
     private void deleteExamFromDataBase(Exam exam) {

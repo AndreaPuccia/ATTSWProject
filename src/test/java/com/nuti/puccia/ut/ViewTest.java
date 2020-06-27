@@ -66,7 +66,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
         assertThat(window.button("DeleteReservation").isEnabled()).isFalse();
         assertThat(window.button("DeleteStudent").isEnabled()).isFalse();
         assertThat(window.label("ReservationLabel").text()).isEqualTo("Select a student to add");
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+        assertThat(window.label("ErrorLabel").text()).isEmpty();
     }
 
     @Test
@@ -216,7 +216,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
             view.updateExams(new ArrayList<>(Arrays.asList(exam1, exam2)));
         });
         assertThat(window.list("ExamList").contents()).containsExactly(exam1.toString(), exam2.toString());
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+        assertThat(window.label("ErrorLabel").text()).isEmpty();
     }
 
     @Test
@@ -230,7 +230,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
         });
         assertThat(window.list("ExamList").contents()).containsExactly(exam2.toString(), exam1.toString());
         assertThat(window.list("ExamList").selection()).isEmpty();
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+        assertThat(window.label("ErrorLabel").text()).isEmpty();
     }
 
 
@@ -272,7 +272,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
             view.updateStudents(new ArrayList<>(Arrays.asList(student1, student2)));
         });
         assertThat(window.list("StudentList").contents()).containsExactly(student1.toString(), student2.toString());
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+        assertThat(window.label("ErrorLabel").text()).isEmpty();
     }
 
     @Test
@@ -285,7 +285,7 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
             view.updateStudents(new ArrayList<>(Arrays.asList(student2, student1)));
         });
         assertThat(window.list("StudentList").contents()).containsExactly(student2.toString(), student1.toString());
-        assertThat(window.label("ErrorLabel").text()).isEqualTo("");
+        assertThat(window.label("ErrorLabel").text()).isEmpty();
     }
 
 

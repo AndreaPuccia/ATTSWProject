@@ -45,11 +45,11 @@ public class JpaIT {
     @Test
     public void testStudent() {
         Student student = new Student("Andrea", "Puccia");
-        assertThat(student.getId()).isEqualTo(0);
+        assertThat(student.getId()).isZero();
         entityManager.getTransaction().begin();
         entityManager.persist(student);
         entityManager.getTransaction().commit();
-        assertThat(student.getId()).isGreaterThan(0);
+        assertThat(student.getId()).isPositive();
 
         List<Student> results = entityManager.createQuery("select s from Student s", Student.class).getResultList();
         assertThat(results).containsExactly(student);
@@ -58,11 +58,11 @@ public class JpaIT {
     @Test
     public void testExam() {
         Exam exam = new Exam("ATTSW", new LinkedHashSet<>());
-        assertThat(exam.getId()).isEqualTo(0);
+        assertThat(exam.getId()).isZero();
         entityManager.getTransaction().begin();
         entityManager.persist(exam);
         entityManager.getTransaction().commit();
-        assertThat(exam.getId()).isGreaterThan(0);
+        assertThat(exam.getId()).isPositive();
 
         List<Exam> results = entityManager.createQuery("select e from Exam e", Exam.class).getResultList();
         assertThat(results).containsExactly(exam);
