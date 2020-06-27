@@ -42,7 +42,7 @@ public class ServiceLayerTest {
     }
 
     @Test
-    public void findAllStudentsWhenTheyArePresent() {
+    public void findAllStudents() {
         Student student = new Student("Andrea", "Puccia");
         when(studentRepository.findAll()).thenReturn(new ArrayList<>(Collections.singletonList(student)));
         assertThat(serviceLayer.findAllStudents()).containsExactly(student);
@@ -51,7 +51,7 @@ public class ServiceLayerTest {
     }
 
     @Test
-    public void findAllExamsWhenTheyArePresent() {
+    public void findAllExams() {
         Exam exam = new Exam("ATTSW", new LinkedHashSet<>());
         when(examRepository.findAll()).thenReturn(new ArrayList<>(Collections.singletonList(exam)));
         assertThat(serviceLayer.findAllExams()).containsExactly(exam);
@@ -140,7 +140,7 @@ public class ServiceLayerTest {
 
 
     @Test
-    public void addReservation() {
+    public void addReservationWhenItDoesNotExist() {
         Student student = new Student("Andrea", "Puccia");
         Exam exam = new Exam("ATTSW", new LinkedHashSet<>());
         when(transactionManager.executeTransaction(any(), anyString())).thenAnswer(

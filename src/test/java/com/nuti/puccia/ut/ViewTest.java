@@ -236,7 +236,6 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void showExamsOnUpdateExamsWhenExamSelected() {
         GuiActionRunner.execute(() -> {
             view.getExamModel().addElement(exam1);
@@ -252,7 +251,6 @@ public class ViewTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void showExamsOnUpdateExamsWhenExamSelectedDoesNotExist() {
         GuiActionRunner.execute(() -> {
             view.getExamModel().addElement(exam1);

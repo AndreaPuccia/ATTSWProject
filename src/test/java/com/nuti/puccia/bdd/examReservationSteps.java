@@ -98,7 +98,7 @@ public class examReservationSteps {
     }
     @When("The user selects an Exam")
     @Given("The user selects an Exam")
-    public void whenTheUserSelectsAnExam() {
+    public void theUserSelectsAnExam() {
         window.list("ExamList").selectItem(Pattern.compile(".*" + selectedExam + ".*"));
     }
 

@@ -58,7 +58,7 @@ public class ControllerTest {
 
 
     @Test
-    public void deleteStudentWhenItExists() {
+    public void deleteStudentWhenHeExists() {
         controller.deleteStudent(student);
         inOrder.verify(serviceLayer).deleteStudent(student);
         inOrder.verify(view).updateExams(exams);
@@ -67,7 +67,7 @@ public class ControllerTest {
 
 
     @Test
-    public void deleteStudentWhenItDoesNotExist() {
+    public void deleteStudentWhenHeDoesNotExist() {
         doThrow(new IllegalArgumentException("Error message")).when(serviceLayer).deleteStudent(student);
         controller.deleteStudent(student);
         inOrder.verify(view).updateExams(exams);

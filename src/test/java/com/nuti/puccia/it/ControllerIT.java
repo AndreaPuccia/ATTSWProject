@@ -147,7 +147,7 @@ public class ControllerIT {
     }
 
     @Test
-    public void updateReservationsOnDelete() {
+    public void updateReservationsOnDeleteReservation() {
         entityManager.getTransaction().begin();
         studentRepository.addStudent(student1);
         studentRepository.addStudent(student2);

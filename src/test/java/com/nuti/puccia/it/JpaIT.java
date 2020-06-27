@@ -69,7 +69,7 @@ public class JpaIT {
     }
 
     @Test
-    public void testExamStudents() {
+    public void testExamStudentsInOrder() {
         Exam exam = new Exam("ATTSW", new LinkedHashSet<>());
         Student student1 = new Student("Andrea", "Puccia");
         Student student2 = new Student("Lorenzo", "Nuti");
