@@ -30,7 +30,7 @@
         <awaitility.version>4.0.2</awaitility.version>
 
         <!-- Sonar rules -->
-        <sonar.issue.ignore.multicriteria>e11,e12,e13,e14,e15,e16,e17</sonar.issue.ignore.multicriteria>
+        <sonar.issue.ignore.multicriteria>e11,e12</sonar.issue.ignore.multicriteria>
         <!-- Disable rule for "Inheritance tree of classes should not be too deep" -->
         <sonar.issue.ignore.multicriteria.e11.ruleKey>
             java:S110
@@ -38,50 +38,16 @@
         <sonar.issue.ignore.multicriteria.e11.resourceKey>
             **/view/swing/*
         </sonar.issue.ignore.multicriteria.e11.resourceKey>
-        <!-- Disable rule for "Method names should comply with a naming convention" -->
+        <!-- Disable rule for "Using command line arguments is security-sensitive" -->
         <sonar.issue.ignore.multicriteria.e12.ruleKey>
-            java:S100
+            java:S4823
         </sonar.issue.ignore.multicriteria.e12.ruleKey>
         <sonar.issue.ignore.multicriteria.e12.resourceKey>
-            **/view/swing/*
-        </sonar.issue.ignore.multicriteria.e12.resourceKey>
-        <!-- Disable rule for "Only static class initializers should be used" -->
-        <sonar.issue.ignore.multicriteria.e13.ruleKey>
-            java:S1171
-        </sonar.issue.ignore.multicriteria.e13.ruleKey>
-        <sonar.issue.ignore.multicriteria.e13.resourceKey>
-            **/view/swing/*
-        </sonar.issue.ignore.multicriteria.e13.resourceKey>
-        <!-- Disable rule for "Raw types should not be used" -->
-        <sonar.issue.ignore.multicriteria.e14.ruleKey>
-            java:S3740
-        </sonar.issue.ignore.multicriteria.e14.ruleKey>
-        <sonar.issue.ignore.multicriteria.e14.resourceKey>
-            **/view/swing/*
-        </sonar.issue.ignore.multicriteria.e14.resourceKey>
-        <!-- Disable rule for "String literals should not be duplicated" -->
-        <sonar.issue.ignore.multicriteria.e15.ruleKey>
-            java:S1192
-        </sonar.issue.ignore.multicriteria.e15.ruleKey>
-        <sonar.issue.ignore.multicriteria.e15.resourceKey>
-            **/view/swing/*
-        </sonar.issue.ignore.multicriteria.e15.resourceKey>
-        <!-- Disable rule for "Using command line arguments is security-sensitive" -->
-        <sonar.issue.ignore.multicriteria.e16.ruleKey>
-            java:S4823
-        </sonar.issue.ignore.multicriteria.e16.ruleKey>
-        <sonar.issue.ignore.multicriteria.e16.resourceKey>
             **/App.java
-        </sonar.issue.ignore.multicriteria.e16.resourceKey>
-        <!-- Disable rule for "Only one method invocation is expected when testing runtime exceptions" -->
-        <sonar.issue.ignore.multicriteria.e17.ruleKey>
-            java:S5778
-        </sonar.issue.ignore.multicriteria.e17.ruleKey>
-        <sonar.issue.ignore.multicriteria.e17.resourceKey>
-            **/JpaIT.java
-        </sonar.issue.ignore.multicriteria.e17.resourceKey>
+        </sonar.issue.ignore.multicriteria.e12.resourceKey>
 
         <sonar.coverage.exclusions>
+            **/Exam.*,
             **/Student.*,
             **/App.*
         </sonar.coverage.exclusions>
@@ -219,6 +185,7 @@
                 <version>0.8.5</version>
                 <configuration>
                     <excludes>
+                        <exclude>**/Exam.*</exclude>
                         <exclude>**/Student.*</exclude>
                         <exclude>**/App.*</exclude>
                     </excludes>

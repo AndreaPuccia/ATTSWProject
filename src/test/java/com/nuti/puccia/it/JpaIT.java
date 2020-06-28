@@ -4,10 +4,7 @@ import com.nuti.puccia.model.Exam;
 import com.nuti.puccia.model.Student;
 import org.junit.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.RollbackException;
+import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -103,11 +100,10 @@ public class JpaIT {
         exam2.addStudent(student);
         em2.getTransaction().commit();
 
-        assertThatThrownBy(() -> {
-            entityManager.getTransaction().begin();
-            exam.addStudent(student);
-            entityManager.getTransaction().commit();
-        }).isInstanceOf(RollbackException.class);
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        exam.addStudent(student);
+        assertThatThrownBy(transaction::commit).isInstanceOf(RollbackException.class);
 
         em2.refresh(exam2);
         assertThat(exam2.getStudents()).containsExactly(student);
