@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/AndreaPuccia/ATTSWProject.svg?branch=master)](https://travis-ci.org/AndreaPuccia/ATTSWProject)
-[![Coverage Status](https://coveralls.io/repos/github/AndreaPuccia/ATTSWProject/badge.svg?branch=master)](https://coveralls.io/github/AndreaPuccia/ATTSWProject?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/AndreaPuccia/ATTSWProject/badge.svg?branch=master&service=github)](https://coveralls.io/github/AndreaPuccia/ATTSWProject?branch=master&service=github)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.nuti.puccia%3AATTSWProject&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.nuti.puccia%3AATTSWProject)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.nuti.puccia%3AATTSWProject&metric=coverage)](https://sonarcloud.io/dashboard?id=com.nuti.puccia%3AATTSWProject)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=com.nuti.puccia%3AATTSWProject&metric=bugs)](https://sonarcloud.io/dashboard?id=com.nuti.puccia%3AATTSWProject)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=com.nuti.puccia%3AATTSWProject&metric=code_smells)](https://sonarcloud.io/dashboard?id=com.nuti.puccia%3AATTSWProject)
 
