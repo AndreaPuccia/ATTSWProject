@@ -13,7 +13,7 @@ L'applicazione consente di aggiungere, rimuovere e visualizzare le prenotazioni 
 ## Maven Build
 Tramite il comando maven specificato è possibile effettuare una build completa del progetto durante la quale il progetto viene compilato, vengono eseguiti gli Unit Test, poi viene avviato il container Docker contenente il server MySql, vengono eseguiti gli Integration Test e gli End2End, viene stoppato il container docker, viene eseguita la fase di verifica del plugin failsafe e infine sono generati i report della copertura del codice e dei Mutation Test tramite Pit.
 ```
-  maven clean verify
+  mvn clean verify
 ```
 ## Esecuzione applicazione
 Per eseguire l'applicazione deve essere prima avviato un server MySql, ad esempio attraverso il lancio di un Docker container, e in seguito avviata l'applicazione passando il valore desiderato nei parametri disponibili, tra parentesi è specificato il valore di default:
