@@ -15,7 +15,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <hibernate.version>5.4.16.Final</hibernate.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
         <hibernate.c3po.version>5.4.16.Final</hibernate.c3po.version>
         <picocli.version>4.3.2</picocli.version>
         <mysql.version>8.0.20</mysql.version>
