@@ -18,7 +18,7 @@
         <hibernate.version>5.4.16.Final</hibernate.version>
         <hibernate.c3po.version>5.4.16.Final</hibernate.c3po.version>
         <picocli.version>4.3.2</picocli.version>
-        <mysql.version>8.0.20</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <slf4j.version>1.7.30</slf4j.version>
         <intellij.version>7.0.3</intellij.version>
 
